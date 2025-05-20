@@ -1,8 +1,10 @@
+//Archivo principal del servidor
+//Este archivo se encarga de inicializar el servidor y las rutas
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import connection from './db.js';
-//import { router } from './routes/index.js'
+import router from './Routes/indexRoutes.js';
 
 dotenv.config();
 
@@ -20,6 +22,8 @@ app.get('/test', async (req, res) => {//funcion para comprobar la conexion a la 
     res.status(500).send('Error de conexión: ' + error.message);
   }
 });
+
+app.use(router);//llama a las rutas
 
 app.listen(port,()=>{
     console.log(`Servidor escuchando en el puerto ${port}`)
