@@ -4,7 +4,7 @@
   position: relative;
   width: 100%;
   height: 80vh;
-  background: url('/home/lnb/SISTEMA-DE-GESTION-DE-RESERVAS-PARA-HOTELES-Y-ALOJAMIENTOS/SISTEMA-DE-GESTION-DE-RESERVAS-PARA-HOTELES-Y-ALOJAMIENTOS/Frontend/src/assets/home.jpeg') center/cover no-repeat;
+  background: url('../src/assets/home.jpeg') center/cover no-repeat;
 }
 .hero__overlay {
   position: absolute;
