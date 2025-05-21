@@ -1,7 +1,7 @@
 // src/components/Header.jsx
 import React from 'react';
 import { Navbar, Container, Nav } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import {  Link, useNavigate  } from 'react-router-dom';
 import './Header.css';
 
 export default function Header() {
@@ -17,8 +17,8 @@ export default function Header() {
           <Nav className="ms-auto header__nav">
             {[
               { label: 'Home', to: '/' },
-              { label: 'Rooms', to: '/room' },
-              { label: 'Gallery', to: '/gallery' },
+
+              { label: 'Gallery', to: "/gallery#gallery" },
               { label: 'Contact', to: '/contact' },
               { label: 'Login', to: '/login' },
             ].map(({ label, to }) => (

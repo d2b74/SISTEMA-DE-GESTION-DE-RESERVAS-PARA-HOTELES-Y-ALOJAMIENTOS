@@ -1,18 +1,42 @@
 // src/components/Gallery.jsx
-import React from 'react';
-import { Container, Row, Col, Image } from 'react-bootstrap';
+import React from "react";
+import { Card, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import { useBooking } from "../context/BookingContext";
+import "./Gallery.css";
 
-export function Gallery({ images }) {
+export default function Gallery({ images }) {
+  const navigate = useNavigate();
+  const { setBooking } = useBooking();
+
+  const handleSelect = (room) => {
+    setBooking((b) => ({ ...b, room }));
+    navigate("/alquiler");
+  };
+
   return (
-    <Container className="py-5">
-      <h2 className="text-center mb-4">Galería</h2>
-      <Row xs={1} sm={2} lg={4} className="g-3">
-        {images.map((src, idx) => (
+    <div id="gallery" className="gallery-container">
+      <Row xs={1} sm={2} md={3} lg={4} className="g-4">
+        {images.map((room, idx) => (
           <Col key={idx}>
-            <Image src={src} alt={`Galería ${idx + 1}`} fluid rounded />
+            <Card className="gallery-card" onClick={() => handleSelect(room)}>
+              <div className="gallery-card__img-wrapper">
+                <Card.Img
+                  variant="top"
+                  src={room.url}
+                  alt={room.title}
+                  className="gallery-card__img"
+                />
+              </div>
+              <Card.Body className="text-center">
+                <Card.Title className="gallery-card__title">
+                  {room.title}
+                </Card.Title>
+              </Card.Body>
+            </Card>
           </Col>
         ))}
       </Row>
-    </Container>
+    </div>
   );
 }
