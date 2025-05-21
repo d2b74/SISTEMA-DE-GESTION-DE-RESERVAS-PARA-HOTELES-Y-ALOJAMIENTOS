@@ -1,4 +1,4 @@
-import { reservaModel } from "../model/reservaModel.js";
+import { reservaModel } from "../Models/reservaModel.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 export class reservaController {
