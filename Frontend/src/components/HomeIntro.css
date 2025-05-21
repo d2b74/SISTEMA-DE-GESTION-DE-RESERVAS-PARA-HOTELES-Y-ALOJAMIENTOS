@@ -1,0 +1,52 @@
+/* src/components/HomeIntro.css */
+.home-intro {
+  background-color: #E5DFFF;
+  margin-bottom: 5%;
+}
+
+.home-intro__image-col {
+  /* El contenedor para dar aspecto de foto */
+  padding: 0;
+}
+
+.home-intro__image {
+  background-image: url('https://source.unsplash.com/800x600/?room'); /* Reemplaza con tu URL */
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  padding-top: 75%; /* ratio 4:3 */
+  border-radius: .5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.home-intro__content {
+  padding: 0 1rem;
+}
+
+.home-intro__title {
+  font-family: 'Great Vibes', cursive;
+  font-size: 3rem;
+  color: #5747A1;
+  margin-bottom: 1rem;
+}
+
+.home-intro__text {
+  font-size: 1.125rem;
+  color: #343a40;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.home-intro__btn {
+  font-size: 1rem;
+  padding: .75rem 1.5rem;
+  border-radius: 50px;
+  border-color: #5747A1;
+  color: #5747A1;
+}
+
+.home-intro__btn:hover {
+  background-color: #5747A1;
+  color: #fff;
+  border-color: #5747A1;
+}

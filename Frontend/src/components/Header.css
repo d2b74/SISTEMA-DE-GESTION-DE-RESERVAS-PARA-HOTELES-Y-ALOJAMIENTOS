@@ -1,0 +1,31 @@
+/* src/components/Header.css */
+.header {
+  background-color: #ECECEC;
+  padding: .75rem 1rem;
+}
+.header__brand {
+  display: flex;
+  align-items: center;
+}
+.header__brand span[role="img"] {
+  font-size: 2rem;
+  color: #8A6CF5;
+  margin-right: .5rem;
+}
+.header__brand-text {
+  font-family: 'Great Vibes', cursive;
+  font-size: 1.75rem;
+  color: #5747A1;
+}
+.header__nav {
+  gap: 2rem;
+}
+.header__link {
+  font-family: 'Great Vibes', cursive;
+  font-size: 1.1rem;
+  color: #5747A1 !important;
+  padding: 0;
+}
+.header__link:hover {
+  color: #8A6CF5 !important;
+}

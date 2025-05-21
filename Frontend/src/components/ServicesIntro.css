@@ -1,0 +1,42 @@
+/* src/components/ServicesIntro.css */
+.services-intro {
+  background-color: #E5DFFF;
+}
+
+.services-intro__content {
+  padding: 0 1rem;
+}
+
+.services-intro__title {
+  font-family: 'Great Vibes', cursive;
+  font-size: 3rem;
+  color: #5747A1;
+  margin-bottom: 1rem;
+}
+
+.services-intro__text {
+  font-size: 1.125rem;
+  color: #343a40;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.services-intro__btn {
+  font-size: 1rem;
+  padding: .75rem 1.5rem;
+  border-radius: 50px;
+}
+
+.services-intro__image-col {
+  padding: 0;
+}
+
+.services-intro__image {
+  background-image: url('https://source.unsplash.com/800x600/?spa,hotel');
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  padding-top: 75%; /* 4:3 ratio */
+  border-radius: .5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}

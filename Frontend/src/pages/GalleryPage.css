@@ -1,0 +1,59 @@
+/* src/pages/GalleryPage.css */
+
+.gallery-hero {
+  position: relative;
+  height: 80vh;
+  background-image: url('https://source.unsplash.com/1600x900/?hotel,luxury');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-align: center;
+}
+
+.gallery-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.gallery-hero__container {
+  position: relative;
+  z-index: 2;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.gallery-hero__title {
+  font-family: 'Great Vibes', cursive;
+  font-size: 4rem;
+  margin-bottom: 2rem;
+  color: #fff;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+}
+
+.gallery-hero__filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.gallery-hero__filter-btn {
+  min-width: 140px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+  font-style: italic;
+}
+
+.gallery-hero__subtitle {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2rem;
+  color: #fff;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.4);
+}

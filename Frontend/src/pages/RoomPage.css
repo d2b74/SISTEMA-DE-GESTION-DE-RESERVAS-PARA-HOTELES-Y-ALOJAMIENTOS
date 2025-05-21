@@ -1,0 +1,99 @@
+.room-page {
+  background-color: #E5DFFF;
+}
+
+/* Split flex: izquierda y derecha */
+.room-page__split {
+  display: flex;
+  align-items: stretch; /* iguala altura de ambas columnas */
+  max-width: 100%;
+  margin: 0 auto;
+  
+  gap: 1rem;
+}
+
+/* Izquierda: ocupa el 40% */
+.room-page__left {
+  flex: 0 0 40%;
+  overflow: hidden;
+}
+
+/* Imagen: cubre todo el contenedor e object-fit */
+.room-page__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-top-right-radius: 10rem;
+  border-bottom-right-radius: 10rem;
+}
+
+/* Derecha: ocupa resto y organiza paneles */
+.room-page__right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+/* Paneles blancos con bordes redondeados */
+.room-page__panel {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Títulos y textos */
+.room-page__heading {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2rem;
+  color: #5747A1;
+  margin-bottom: 0.75rem;
+}
+.room-page__text {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Preferencias */
+.room-page__prefs-title {
+  font-family: 'Great Vibes', cursive;
+  font-size: 1.5rem;
+  color: #5747A1;
+  margin-bottom: 0.75rem;
+}
+.room-page__prefs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+.room-page__prefs-list li {
+  margin-bottom: 0.5rem;
+}
+.room-page__prefs-btn {
+  border-radius: 50px;
+  padding: 0.5rem 1.5rem;
+}
+
+/* Servicios al fondo */
+.room-page__services {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.room-page__svc-item {
+  text-align: center;
+}
+.room-page__svc-icon {
+  font-size: 1.75rem;
+}
+.room-page__svc-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #5747A1;
+  margin-top: 0.25rem;
+}
