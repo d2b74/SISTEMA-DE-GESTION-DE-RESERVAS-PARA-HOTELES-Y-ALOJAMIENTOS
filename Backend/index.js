@@ -11,7 +11,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());//para que no haya conflicto con el front
+app.use(cors({origin:process.env.FRONT_URL, credentials: true}));//para que no haya conflicto con el front
 app.use(express.json());//para que se pueda recibir datos en formato json
 
 /* app.get('/test', async (req, res) => {//funcion para comprobar la conexion a la bd
