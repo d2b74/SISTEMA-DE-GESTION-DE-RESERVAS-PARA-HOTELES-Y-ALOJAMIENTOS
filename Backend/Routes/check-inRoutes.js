@@ -1,10 +1,11 @@
 import { Router } from "express";
+import { Checkin } from "../Controllers/checkinController.js"; // Importar el controlador de check-in
 const checkinRouter = Router();
 
-checkinRouter.get('/', (req, res) => {res.send('Check-in')})//para obtener todas las reservas
-checkinRouter.get('/:id', (req, res) => {res.send('Check-in por id '+req.params.id)})//para obtener la reserva por id
-checkinRouter.post('/', (req, res) => {res.send('Check-in creado')})//para crear una reserva
-checkinRouter.put('/:id', (req, res) => {res.send('Check-in actualizado')})//para actualizar una reserva
-checkinRouter.delete('/:id', (req, res) => {res.send('Check-in eliminado')})//para eliminar una reserva
+checkinRouter.get('/',Checkin.getCheckins)//para obtener todas las reservas
+checkinRouter.get('/:id',Checkin.getCheckinById)//para obtener la reserva por id
+checkinRouter.post('/', Checkin.createCheckin)//para crear una reserva
+checkinRouter.put('/:id',Checkin.updateCheckin)//para actualizar una reserva
+checkinRouter.delete('/:id',Checkin.deleteCheckin)//para eliminar una reserva
 
 export default checkinRouter;
