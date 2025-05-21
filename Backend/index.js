@@ -25,7 +25,7 @@ app.use(express.json());//para que se pueda recibir datos en formato json
 
 app.use(router);//llama a las rutas
 
-app.listen(port,()=>{
-    console.log(`Servidor escuchando en el puerto ${port}`)
-})
+app.listen(port, () => {
+    console.log(`✅ Servidor escuchando en: http://localhost:${port}`);
+});
 
