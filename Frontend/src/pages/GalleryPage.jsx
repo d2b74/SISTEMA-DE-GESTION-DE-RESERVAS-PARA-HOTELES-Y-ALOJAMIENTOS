@@ -1,45 +1,38 @@
 // src/pages/GalleryPage.jsx
-import React, { useEffect, useState } from 'react';
-import { Container, Spinner, Alert, Button } from 'react-bootstrap';
+import React from 'react';
+import { Container } from 'react-bootstrap';
 import Header from '../components/Header';
 import HeroSearch from '../components/HeroSearch';
 import Footer from '../components/Footer';
-import { Gallery } from '../components/Gallery';
+import Gallery from '../components/Gallery';
+import roomImages from '../data/roomImages';
 import './GalleryPage.css';
 
 export default function GalleryPage() {
-  const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetch('https://picsum.photos/v2/list?page=2&limit=12')
-      .then(res => {
-        if (!res.ok) throw new Error('Error al cargar imágenes');
-        return res.json();
-      })
-      .then(data => setImages(data.map(item => item.download_url)))
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false));
-  }, []);
+  // Construimos la lista de habitaciones a partir de tus imágenes locales
+  const rooms = roomImages.map((url, idx) => ({
+    id: idx,
+    url,
+    title: `Habitación ${idx + 1}`,
+    description: 'Una habitación exquisita con todas las comodidades.', // ajustar luego desde BD
+    price: 100 + idx * 20,                                        // ejemplo de precio
+  }));
 
   return (
     <>
       <Header />
-      <HeroSearch  />  
+      <HeroSearch />
 
-
-      <section className="py-5" style={{ backgroundColor: '#E5DFFF' }}>
+      <section
+        id="gallery"
+        className="py-5"
+        style={{ backgroundColor: '#E5DFFF' }}
+      >
         <Container fluid="xxl">
-          {loading && (
-            <div className="text-center my-5"><Spinner animation="border" /></div>
-          )}
-          {error && (
-            <Alert variant="danger" className="text-center">{error}</Alert>
-          )}
-          {!loading && !error && <Gallery images={images} />}
+          <Gallery images={rooms} />
         </Container>
       </section>
+
       <Footer />
     </>
   );

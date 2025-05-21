@@ -1,9 +1,21 @@
 // src/components/HeroSearch.jsx
-import React from 'react';
+import React, { useState } from 'react';
+import { useBooking } from '../context/BookingContext';
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './HeroSearch.css';
 
+
 export default function HeroSearch() {
+  const { booking, setBooking } = useBooking();
+  const navigate = useNavigate();
+
+  const [local, setLocal] = useState(booking);
+
+  const handleSearch = () => {
+    setBooking(local);
+    navigate('/alquiler');
+  };  
   return (
     <section >
       <div className="hero">
@@ -12,32 +24,10 @@ export default function HeroSearch() {
       </div>
       
       <Container fluid className="hero__content px-0">
-        
-        <Row className="justify-content-center g-3 hero__form">
-          <Col xs={12} md={3}>
-            <Form.Control type="date" placeholder="Check-in" />
-          </Col>
-          <Col xs={12} md={3}>
-            <Form.Control type="date" placeholder="Check-out" />
-          </Col>
-          <Col xs={12} md={2}>
-            <Form.Select>
-              <option>Tipo Habitación</option>
-              <option>Single</option>
-              <option>Double</option>
-            </Form.Select>
-          </Col>
-          <Col xs={12} md={2}>
-            <Form.Select>
-              <option>Personas</option>
-              <option>1</option>
-              <option>2</option>
-            </Form.Select>
-          </Col>
-          <Col xs="auto">
-            <Button variant="primary" className="hero__btn">Reservar</Button>
-          </Col>
-        </Row>
+        <p className="hero__tagline">
+          Vive la experiencia de lujo y confort en cada estancia
+        </p>
+
       </Container>
 
 
