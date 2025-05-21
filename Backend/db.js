@@ -1,3 +1,4 @@
+//para crear la conexion multiple a la base de datos
 import { createPool } from 'mysql2/promise';
 import dotenv from 'dotenv';
 
