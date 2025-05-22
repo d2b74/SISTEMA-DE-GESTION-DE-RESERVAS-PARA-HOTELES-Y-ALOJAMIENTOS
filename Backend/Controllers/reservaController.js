@@ -1,5 +1,8 @@
 import { reservaModel } from "../Models/reservaModel.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import {validateReserva, validatePartialReserva } from "../schemas/reserva.js"; 
+
+
 
 export class reservaController {
     // Obtener todas las reservas
@@ -20,14 +23,21 @@ export class reservaController {
 
     // Crear una reserva
     static createReservaHandler = async (req, res) => {
-        const result = await reservaModel.createReserva(req.body);
+        const reserva = req.body.reserva;
+        const  reservaValid = validateReserva(reserva);     
+        const result = await reservaModel.createReserva(reservaValid.data);
         res.status(201).json(result);
     };
 
     // Actualizar una reserva
     static updateReserva = async (req, res) => {
         const id = req.params.id;
-        const affectedRows = await reservaModel.updateReserva(req.body, id);
+        const reserva = req.body.reserva;
+        const reservaValid = validatePartialReserva(reserva);
+        if (!reservaValid.success) {
+            return res.status(400).json({ message: reservaValid.error.errors });
+        }
+        const affectedRows = await reservaModel.updateReserva(reservaValid.data, id);
         if (affectedRows > 0) {
             res.status(200).json({ message: 'Reserva actualizada' });
         } else {
