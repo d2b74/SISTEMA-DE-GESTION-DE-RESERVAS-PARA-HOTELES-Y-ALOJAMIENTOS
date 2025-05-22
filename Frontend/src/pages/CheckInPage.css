@@ -1,0 +1,60 @@
+/* CheckInPage.css */
+
+.checkin-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #e5dfff 0%, #fff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.checkin-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+.checkin-card h2 {
+  font-family: 'Great Vibes', cursive;
+  color: #5747A1;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.checkin-info {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 2rem;
+}
+
+.checkin-info strong {
+  color: #5747A1;
+  display: inline-block;
+  min-width: 120px;
+}
+
+.checkin-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.checkin-buttons .btn-primary {
+  background-color: #5747A1;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+}
+
+.checkin-buttons .btn-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+}

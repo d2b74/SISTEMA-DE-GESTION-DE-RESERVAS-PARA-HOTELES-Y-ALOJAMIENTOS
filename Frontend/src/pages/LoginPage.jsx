@@ -2,12 +2,16 @@
 import React, { useState } from 'react';
 import { Container, Form, Button, InputGroup, Alert } from 'react-bootstrap';
 import { FaGoogle, FaUser, FaLock, FaTimes } from 'react-icons/fa';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const validate = () => {
     const errs = {};
@@ -26,6 +30,9 @@ export default function LoginPage() {
     if (!validate()) return;
     // Lógica de login...
     alert('Login exitoso');
+    login(email); 
+    navigate('/');
+    
   };
 
   return (

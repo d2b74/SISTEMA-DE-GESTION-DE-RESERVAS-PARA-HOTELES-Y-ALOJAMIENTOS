@@ -1,5 +1,7 @@
 import React from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Carousel } from 'react-bootstrap';
+import { HashLink } from 'react-router-hash-link';
+import servicesImages from '../data/servicesImages';
 import './ServicesIntro.css';
 
 export default function ServicesIntro() {
@@ -22,7 +24,19 @@ export default function ServicesIntro() {
 
           {/* Imagen a la derecha */}
           <Col xs={12} lg={6} className="services-intro__image-col">
-            <div className="services-intro__image" />
+
+            <Carousel className="services-intro__carousel" indicators={false}>
+              {servicesImages.map((url, i) => (
+                <Carousel.Item key={i}>
+                  <img
+                    className="d-block w-100 services-intro__img"
+                    src={url}
+                    alt={`servicios ${i + 1}`}
+                  />
+                </Carousel.Item>
+              ))}
+            </Carousel>
+
           </Col>
         </Row>
       </Container>

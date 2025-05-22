@@ -5,7 +5,8 @@ import GalleryPage from './pages/GalleryPage.jsx';
 import RoomPage from './pages/RoomPage';
 import LoginPage from './pages/LoginPage.jsx';
 import AlquilerYPage from './pages/AlquilerYPage.jsx';
-
+import  MisReservasPage from './pages/MisReservasPage.jsx';
+import CheckInPage from './pages/CheckInPage.jsx';
 
 function ScrollToHash() {
   const { hash } = useLocation();
@@ -31,7 +32,8 @@ export default function App() {
         <Route path="/room" element={<RoomPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/alquiler" element={<AlquilerYPage />} />
-
+        <Route path="/reservas" element={<MisReservasPage />} />
+        <Route path="/checkin" element={<CheckInPage />} />
       </Routes>
     </HashRouter>
   );

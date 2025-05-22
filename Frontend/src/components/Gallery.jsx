@@ -10,7 +10,13 @@ export default function Gallery({ images }) {
   const { setBooking } = useBooking();
 
   const handleSelect = (room) => {
-    setBooking((b) => ({ ...b, room }));
+    setBooking({
+      room,
+      checkIn: '',
+      checkOut: '',
+      people: 1,
+      isConfirmed: false,
+    });
     navigate("/alquiler");
   };
 

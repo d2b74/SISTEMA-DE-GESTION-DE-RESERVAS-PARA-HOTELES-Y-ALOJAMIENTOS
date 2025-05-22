@@ -1,4 +1,8 @@
-.home-intro__carousel {
+.home-intro{
+  background-color: #E5DFFF;
+  margin-bottom: 5%;
+}
+home-intro__carousel {
   border-radius: 1rem;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -7,16 +11,22 @@
 .home-intro__img {
   height: 300px;
   object-fit: cover;
+  background-size: cover;
+  background-position: center;
+  border-radius: .5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 /* Mantenemos el resto de estilos que ya tenías */
 .home-intro__title {
   font-family: 'Great Vibes', cursive;
-  font-size: 2.5rem;
+  font-size: 3rem;
   color: #5747A1;
   margin-bottom: 1rem;
 }
-
+.home-intro__content {
+  padding: 0 1rem;
+}
 .home-intro__text {
   font-size: 1rem;
   color: #343a40;
@@ -24,6 +34,7 @@
 }
 
 .home-intro__btn {
+  font-size: 1rem;
   border-radius: 50px;
   padding: 0.6rem 1.5rem;
   font-family: 'Italianno-Regular', cursive;
