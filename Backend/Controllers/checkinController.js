@@ -1,5 +1,6 @@
 import { checkinModel } from "../Models/checkinModel.js"; // Importar el modelo de check-in
 import { asyncHandler } from "../utils/asyncHandler.js"; // Importar el manejador de errores asíncronos
+import { validateCheckin, validatePartialCheckin } from "../schemas/checkin.js"; // Importar los esquemas de validación
 
 export class checkinController {
   // Obtener todos los check-ins
@@ -20,15 +21,24 @@ export class checkinController {
 
   // Crear un check-in
   static createCheckin = async (req, res) => {
-    const data = req.body;
-    const result = await checkinModel.createCheckin(data);
+    const checkin = req.body.checkin;
+    const checkinValid = validateCheckin(checkin);
+    if (!checkinValid.success) {
+  return res.status(400).json({ message: checkinValid.error.errors });
+  }
+    const result = await checkinModel.createCheckin(checkinValid.data);
     res.status(201).json(result);
   };
 
   // Actualizar un check-in
   static updateCheckin = async (req, res) => {
     const id = req.params.id;
-    const result = await checkinModel.updateCheckin(id, req.body);
+    const checkin = req.body.checkin;
+    const checkinValid = validatePartialCheckin(checkin);
+     if (!checkinValid.success) {
+  return res.status(400).json({ message: checkinValid.error.errors });
+  }
+    const result = await checkinModel.updateCheckin(id, checkinValid.data);
     if (result.affectedRows > 0) {
       res.status(200).json({ message: "Check-in actualizado" });
     } else {

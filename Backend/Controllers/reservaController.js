@@ -24,7 +24,10 @@ export class reservaController {
     // Crear una reserva
     static createReservaHandler = async (req, res) => {
         const reserva = req.body.reserva;
-        const  reservaValid = validateReserva(reserva);     
+        const  reservaValid = validateReserva(reserva);
+         if (!reservaValid.success) {
+            return res.status(400).json({ message: reservaValid.error.errors });
+        }     
         const result = await reservaModel.createReserva(reservaValid.data);
         res.status(201).json(result);
     };
