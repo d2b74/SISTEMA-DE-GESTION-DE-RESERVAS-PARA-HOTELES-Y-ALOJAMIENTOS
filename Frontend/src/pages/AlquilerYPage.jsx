@@ -16,7 +16,7 @@ export default function AlquilerYPage() {
   const [localCheckIn, setLocalCheckIn] = useState(booking.checkIn || '');
   const [localCheckOut, setLocalCheckOut] = useState(booking.checkOut || '');
   const [localPeople, setLocalPeople] = useState(booking.people || 1);
-  const { addReservation, updateReservation } = useReservations();
+  const { addReservation, updateReservation ,isRoomAvailable} = useReservations();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -40,6 +40,12 @@ export default function AlquilerYPage() {
       alert('La fecha de check-out debe ser posterior al check-in.');
       return false;
     }
+    // **Validación de disponibilidad**
+    if (!isRoomAvailable(room.id, localCheckIn, localCheckOut)) {
+      alert('La habitación ya está reservada en esas fechas. Elige otras.');
+      return false;
+    }
+
     return true;
   };
 
@@ -73,72 +79,79 @@ export default function AlquilerYPage() {
     navigate("/gallery#gallery", { state: { alert: { variant: 'success', text: message } } });
   };
 
+  if (!room) {
+    return (
+      <Container className="py-5 text-center">
+        <h3>Selecciona primero una habitación en la galería.</h3>
+      </Container>
+    );
+  }
   return (
     <>
       <Header />
-      <section className="alquiler-page">
-        <Container fluid className="px-0 alquiler-wrapper">
-          <Row noGutters className="align-items-stretch">
-            <Col xs={12} lg={6} className="alquiler-left p-0">
-              {room && (
-                <div className="img-mask">
-                  <img src={room.url} alt={room.title} className="alquiler-img" />
+        <section className="alquiler-page">
+          <Container fluid className="px-0 alquiler-wrapper">
+            <Row noGutters className="align-items-stretch">
+              <Col xs={12} lg={6} className="alquiler-left p-0">
+                {room && (
+                  <div className="img-mask">
+                    <img src={room.url} alt={room.title} className="alquiler-img" />
+                  </div>
+                )}
+              </Col>
+              <Col xs={12} lg={6} className="alquiler-right">
+                <div className="panel desc-panel">
+                  <h3>{room?.title || 'Selecciona una habitación'}</h3>
+                  <p>{room?.description || 'Elige una habitación desde la galería.'}</p>
                 </div>
-              )}
-            </Col>
-            <Col xs={12} lg={6} className="alquiler-right">
-              <div className="panel desc-panel">
-                <h3>{room?.title || 'Selecciona una habitación'}</h3>
-                <p>{room?.description || 'Elige una habitación desde la galería.'}</p>
-              </div>
-              <div className="panel prefs-panel">
-                <div className="prefs-header">
-                  <span className="price">${room?.price || '--'}</span>
-                  <small>por {localPeople} noche(s)</small>
+                <div className="panel prefs-panel">
+                  <div className="prefs-header">
+                    <span className="price">${room?.price || '--'}</span>
+                    <small>por {localPeople} noche(s)</small>
+                  </div>
+                  <Form>
+                    <Form.Group className="mb-3" controlId="checkIn">
+                      <Form.Label>Desde</Form.Label>
+                      <Form.Control
+                        type="date"
+                        min={today}
+                        value={localCheckIn}
+                        onChange={e => setLocalCheckIn(e.target.value)}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="checkOut">
+                      <Form.Label>Hasta</Form.Label>
+                      <Form.Control
+                        type="date"
+                        min={localCheckIn || today}
+                        value={localCheckOut}
+                        onChange={e => setLocalCheckOut(e.target.value)}
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="people">
+                      <Form.Label>Personas</Form.Label>
+                      <Form.Select
+                        value={localPeople}
+                        onChange={e => setLocalPeople(Number(e.target.value))}
+                      >
+                        {[1,2,3,4,5].map(n => (
+                          <option key={n} value={n}>{n}</option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </Form>
+                  <Button
+                    variant="primary"
+                    className="w-100"
+                    onClick={handleSubmit}
+                  >
+                    Reservar
+                  </Button>
                 </div>
-                <Form>
-                  <Form.Group className="mb-3" controlId="checkIn">
-                    <Form.Label>Desde</Form.Label>
-                    <Form.Control
-                      type="date"
-                      min={today}
-                      value={localCheckIn}
-                      onChange={e => setLocalCheckIn(e.target.value)}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3" controlId="checkOut">
-                    <Form.Label>Hasta</Form.Label>
-                    <Form.Control
-                      type="date"
-                      min={localCheckIn || today}
-                      value={localCheckOut}
-                      onChange={e => setLocalCheckOut(e.target.value)}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3" controlId="people">
-                    <Form.Label>Personas</Form.Label>
-                    <Form.Select
-                      value={localPeople}
-                      onChange={e => setLocalPeople(Number(e.target.value))}
-                    >
-                      {[1,2,3,4,5].map(n => (
-                        <option key={n} value={n}>{n}</option>
-                      ))}
-                    </Form.Select>
-                  </Form.Group>
-                </Form>
-                <Button
-                  variant="primary"
-                  className="w-100"
-                  onClick={handleSubmit}
-                >
-                  Reservar
-                </Button>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section>
+              </Col>
+            </Row>
+          </Container>
+        </section>
       <Footer />
     </>
   );

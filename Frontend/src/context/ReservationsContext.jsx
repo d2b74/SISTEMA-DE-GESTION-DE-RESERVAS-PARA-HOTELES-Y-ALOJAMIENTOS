@@ -35,9 +35,25 @@ export function ReservationsProvider({ children }) {
     setReservations((prev) => prev.filter((r) => r.id !== id));
   };
 
+  // Comprueba si la habitación está disponible considerando un día de margen tras el checkout
+  const isRoomAvailable = (roomId, newCheckIn, newCheckOut) => {
+    const start = new Date(newCheckIn);
+    const end   = new Date(newCheckOut);
+    return !reservations.some(r => {
+      if (r.room.id !== roomId) return false;
+      const existingStart = new Date(r.checkIn);
+      const existingEnd   = new Date(r.checkOut);
+      // Añadimos un día de margen después del checkout
+      const existingEndPlusOne = new Date(existingEnd.getTime() + 24 * 60 * 60 * 1000);
+      // Si los periodos se solapan (con margen), no está disponible
+      return (start < existingEndPlusOne) && (end > existingStart);
+    });
+  };
+
+
   return (
     <ReservationsContext.Provider
-      value={{ reservations, addReservation, updateReservation, deleteReservation }}>
+      value={{ reservations, addReservation, updateReservation, deleteReservation ,isRoomAvailable}}>
       {children}
     </ReservationsContext.Provider>
   );

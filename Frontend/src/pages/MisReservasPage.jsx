@@ -22,7 +22,6 @@ export default function MisReservasPage() {
   }
 
   const handleEdit = (res) => {
-    // Cargamos el booking con la reserva actual para editar
     setBooking({
       room: res.room,
       checkIn: res.checkIn,
@@ -34,13 +33,7 @@ export default function MisReservasPage() {
     navigate('/alquiler');
   };
 
-  const handleCancel = (id) => {
-    if (window.confirm('¿Estás seguro que quieres cancelar esta reserva?')) {
-      deleteReservation(id);
-    }
-  };
   const handleCheckIn = (res) => {
-    // Carga la reserva actual en el contexto para mostrar en la página de check-in
     setBooking({
       room: res.room,
       checkIn: res.checkIn,
@@ -51,12 +44,26 @@ export default function MisReservasPage() {
     });
     navigate('/checkin');
   };
+
+  const handleCancel = (id) => {
+    if (window.confirm('¿Estás seguro que quieres cancelar esta reserva?')) {
+      deleteReservation(id);
+    }
+  };
+
+  const handleCheckout = (id) => {
+    if (window.confirm('¿Confirmas el checkout de esta reserva?')) {
+      deleteReservation(id);
+      alert('Checkout realizado con éxito');
+      navigate('/');
+    }
+  };
+
   return (
     <>
     <Header />
     <Container className="mis-reservas py-5">
       <h2 className="mb-4 text-center">Mis Reservas</h2>
-      <div className="reservas-list">
       <Row xs={1} md={2} lg={3} className="g-4">
         {reservations.map((res) => (
           <Col key={res.id}>
@@ -73,27 +80,16 @@ export default function MisReservasPage() {
                   <div><strong>Personas:</strong> {res.people}</div>
                   <div><strong>Precio:</strong> ${res.price}</div>
                 </Card.Text>
-                <div className="d-flex justify-content-between reserva-actions">
+                <div className="d-flex flex-wrap justify-content-between reserva-actions">
                   {!res.checkInConfirmed ? (
                     <>
-                      <Button
-                        variant="outline-primary"
-                        onClick={() => handleEdit(res)}
-                      >
+                      <Button variant="outline-primary" onClick={() => handleEdit(res)}>
                         Editar
                       </Button>
-
-                      <Button
-                        variant="outline-success"
-                        onClick={() => handleCheckIn(res)}
-                      >
+                      <Button variant="outline-success" onClick={() => handleCheckIn(res)}>
                         Check-in
                       </Button>
-
-                      <Button
-                        variant="outline-danger"
-                        onClick={() => handleCancel(res.id)}
-                      >
+                      <Button variant="outline-danger" onClick={() => handleCancel(res.id)}>
                         Cancelar
                       </Button>
                     </>
@@ -101,19 +97,17 @@ export default function MisReservasPage() {
                     <Button
                       variant="success"
                       className="w-100"
-                      onClick={() => handleCheckout(res)}
+                      onClick={() => handleCheckout(res.id)}
                     >
                       Checkout
                     </Button>
                   )}
-
                 </div>
               </Card.Body>
             </Card>
           </Col>
         ))}
       </Row>
-      </div>
     </Container>
     <Footer />
     </>
