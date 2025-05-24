@@ -1,101 +1,103 @@
 // src/pages/LoginPage.jsx
 import React, { useState } from 'react';
-import { Container, Form, Button, InputGroup, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, InputGroup, Alert } from 'react-bootstrap';
 import { FaGoogle, FaUser, FaLock, FaTimes } from 'react-icons/fa';
-import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { useAuth } from '../context/AuthContext';
 import './LoginPage.css';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState({});
-  const { login } = useAuth();
   const navigate = useNavigate();
+  const { login } = useAuth();
+  const [form, setForm] = useState({ mail: '', contrasena: '' });
+  const [error, setError] = useState('');
 
-  const validate = () => {
-    const errs = {};
-    if (!email) errs.email = 'El email es obligatorio.';
-    else if (!/^\S+@\S+\.\S+$/.test(email)) errs.email = 'Email inválido.';
-
-    if (!password) errs.password = 'La contraseña es obligatoria.';
-    else if (password.length < 4) errs.password = 'La contraseña debe tener al menos 4 caracteres.';
-
-    setErrors(errs);
-    return Object.keys(errs).length === 0;
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validate()) return;
-    // Lógica de login...
-    alert('Login exitoso');
-    login(email); 
-    navigate('/');
-    
+    const { mail, contrasena } = form;
+    if (!mail || !contrasena) {
+      setError('Por favor completa todos los campos');
+      return;
+    }
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const found = users.find(u => u.mail === mail && u.contrasena === contrasena);
+    if (!found) {
+      setError('Usuario o contraseña incorrectos');
+      return;
+    }
+
+    login(found); //  usar contexto
+    if (found.tipo) {
+      navigate('/admin');    // dashboard de administradores
+    } else {
+      navigate('/');         // home de usuario normal
+    }
   };
 
   return (
-    <Container fluid className="login-page d-flex align-items-center justify-content-center">
-      <div className="login-card position-relative">
-        <Button variant="link" className="close-btn p-0">
-          <FaTimes size={24} />
-        </Button>
-
-        <h2 className="login-title">Login</h2>
-
-        {errors.general && <Alert variant="danger">{errors.general}</Alert>}
-
-        <Form onSubmit={handleLogin}>
-          <Form.Group className="mb-4 input-group-custom" controlId="formEmail">
-            <InputGroup>
-              <InputGroup.Text className="input-icon"><FaUser /></InputGroup.Text>
-              <Form.Control
-                type="email"
-                placeholder="Usuario (email)"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                isInvalid={!!errors.email}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.email}
-              </Form.Control.Feedback>
-            </InputGroup>
-          </Form.Group>
-
-          <Form.Group className="mb-2 input-group-custom" controlId="formPassword">
-            <InputGroup>
-              <InputGroup.Text className="input-icon"><FaLock /></InputGroup.Text>
-              <Form.Control
-                type="password"
-                placeholder="Contraseña"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                isInvalid={!!errors.password}
-              />
-              <Form.Control.Feedback type="invalid">
-                {errors.password}
-              </Form.Control.Feedback>
-            </InputGroup>
-          </Form.Group>
-
-          <div className="text-end mb-4">
-            <a href="#!" className="forgot-link">Olvidé mi contraseña</a>
-          </div>
-
-          <Button type="submit" variant="light" className="btn-custom w-100 mb-3">
-            Login
+    <>
+      <Header />
+      <Container fluid className="login-page d-flex align-items-center justify-content-center">
+        <div className="login-card position-relative">
+          <Button variant="link" className="close-btn p-0" onClick={() => navigate('/') }>
+            <FaTimes size={24} />
           </Button>
-        </Form>
+          <h2 className="login-title">Login</h2>
 
-        <Button variant="outline-light" className="btn-google w-100 mb-3">
-          <FaGoogle className="me-2" /> Continuar con Google
-        </Button>
+          {error && <Alert variant="danger">{error}</Alert>}
 
-        <Button variant="light" className="btn-custom w-100">
-          Crear cuenta
-        </Button>
-      </div>
-    </Container>
+          <Form onSubmit={handleSubmit} noValidate autoComplete="off">
+            <Form.Group className="mb-4 input-group-custom">
+              <InputGroup>
+                <InputGroup.Text className="input-icon"><FaUser /></InputGroup.Text>
+                <Form.Control
+                  name="mail"
+                  type="email"
+                  placeholder="Email"
+                  value={form.mail}
+                  onChange={handleChange}
+                />
+              </InputGroup>
+            </Form.Group>
+
+            <Form.Group className="mb-2 input-group-custom">
+              <InputGroup>
+                <InputGroup.Text className="input-icon"><FaLock /></InputGroup.Text>
+                <Form.Control
+                  name="contrasena"
+                  type="password"
+                  placeholder="Contraseña"
+                  value={form.contrasena}
+                  onChange={handleChange}
+                />
+              </InputGroup>
+            </Form.Group>
+
+            <div className="text-end mb-4">
+              <a href="#" className="forgot-link">Olvidé mi contraseña</a>
+            </div>
+
+            <Button type="submit" variant="light" className="btn-custom w-100 mb-3">
+              Login
+            </Button>
+
+            <Button variant="outline-light" className="btn-google w-100 mb-3">
+              <FaGoogle className="me-2" /> Continuar con Google
+            </Button>
+
+            <Button variant="secondary" className="w-100" onClick={() => navigate('/registro')}>
+              Crear cuenta
+            </Button>
+          </Form>
+        </div>
+      </Container>
+      <Footer />
+    </>
   );
 }

@@ -1,0 +1,22 @@
+.admin-page {
+  background: #D7C8ED;
+}
+
+.sidebar {
+  background: #ffffff;
+  border-right: 1px solid rgba(0,0,0,0.1);
+}
+
+.workspace {
+  background: #F9F7FF;
+}
+
+/* Para que el footer quede siempre abajo */
+.admin-page .vh-100 {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-page .flex-grow-1 {
+  flex: 1;
+}

@@ -25,7 +25,8 @@ export default function CheckInPage() {
     // Actualizar la reserva local con flag de check-in
     updateReservation({
       ...booking,
-      checkInConfirmed: true
+      checkInConfirmed: true,
+      userEmail: user.mail,
     });
     alert('Check-in confirmado con éxito');
     navigate('/reservas');

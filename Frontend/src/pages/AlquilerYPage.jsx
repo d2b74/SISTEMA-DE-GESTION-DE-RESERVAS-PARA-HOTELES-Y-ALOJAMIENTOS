@@ -57,7 +57,8 @@ export default function AlquilerYPage() {
       checkIn: localCheckIn,
       checkOut: localCheckOut,
       people: localPeople,
-      price: room.price
+      price: room.price,
+      userEmail: user.mail
     };
     let message;
 
@@ -91,7 +92,7 @@ export default function AlquilerYPage() {
       <Header />
         <section className="alquiler-page">
           <Container fluid className="px-0 alquiler-wrapper">
-            <Row noGutters className="align-items-stretch">
+            <Row  className="align-items-stretch">
               <Col xs={12} lg={6} className="alquiler-left p-0">
                 {room && (
                   <div className="img-mask">
