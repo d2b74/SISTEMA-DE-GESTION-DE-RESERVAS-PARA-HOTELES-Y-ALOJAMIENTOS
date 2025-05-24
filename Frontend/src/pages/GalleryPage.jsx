@@ -8,11 +8,14 @@ import Gallery from '../components/Gallery';
 import roomImages from '../data/roomImages';
 import './GalleryPage.css';
 import { useLocation } from 'react-router-dom';
+import { useRooms } from '../context/RoomsContext';
 
 
 export default function GalleryPage() {
 
   const location = useLocation();
+  const { rooms, loading, error } = useRooms();
+
   // Inicializamos el estado local del alert
   const [alertInfo, setAlertInfo] = useState(location.state?.alert || null);
   useEffect(() => {
@@ -23,14 +26,17 @@ export default function GalleryPage() {
       return () => clearTimeout(timer);
     }
   }, [alertInfo]);
-
-  // Construimos la lista de habitaciones a partir de tus imágenes locales
-  const rooms = roomImages.map((url, idx) => ({
-    id: idx,
-    url,
-    title: `Habitación ${idx + 1}`,
-    description: 'Una habitación exquisita con todas las comodidades.', // ajustar luego desde BD
-    price: 100 + idx * 20,                                        // ejemplo de precio
+  
+  if (loading) return <Spinner animation="border" className="m-auto" />;
+  if (error) return <Alert variant="danger">{error}</Alert>;
+ // Combinamos datos reales con imágenes locales
+ //eliminar esto cuando el back-end esté listo
+  const galleryRooms = rooms.map((room, idx) => ({
+    id: room.id_habitacion,
+    url: roomImages[idx % roomImages.length], // circular si hay más habitaciones que imágenes
+    title: `Habitación ${room.numero}`,
+    description: room.descripcion || 'Una habitación cómoda y equipada.',
+    price: parseFloat(room.precio),
   }));
 
   return (
@@ -50,7 +56,7 @@ export default function GalleryPage() {
               {alertInfo.text}
             </Alert>
           )}
-          <Gallery images={rooms} />
+          <Gallery images={galleryRooms} />
         </Container>
       </section>
 

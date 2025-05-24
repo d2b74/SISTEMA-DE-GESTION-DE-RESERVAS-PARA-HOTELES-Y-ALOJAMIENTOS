@@ -10,17 +10,41 @@ const statusVariant = {
   Ocupado: 'danger',
   Limpieza: 'info',
 };
+//sacar esto cuando el back-end esté listo
+const tipoTexto = {
+  1: 'Single',
+  2: 'Doble',
+  3: 'Twin',
+  4: 'Suite',
+  5: 'Familiar',
+};
+
+const estadoTexto = {
+  1: 'Disponible',
+  2: 'Ocupado',
+  3: 'Limpieza',
+};
 
 export default function AdminMain() {
   const { rooms, loading, error } = useRooms();
 
   if (loading) return <Spinner animation="border" className="m-auto" />;
   if (error) return <Alert variant="danger">{error}</Alert>;
+  
+    // Transformamos las habitaciones para usar en la UI
+  //sacar esto cuando el back-end esté listo
+  const mappedRooms = rooms.map(room => ({
+    id: room.id_habitacion,
+    number: room.numero,
+    type: tipoTexto[room.tipo] || `Tipo ${room.tipo}`,
+    price: parseFloat(room.precio),
+    status: estadoTexto[room.estado] || 'Desconocido',
+  }));
 
   return (
     <div className="admin-main">
       <Row xs={1} sm={2} md={3} className="g-4">
-        {rooms.map(room => (
+        {mappedRooms.map(room => (
           <Col key={room.id}>
             <Card className="room-card">
               <Card.Body>

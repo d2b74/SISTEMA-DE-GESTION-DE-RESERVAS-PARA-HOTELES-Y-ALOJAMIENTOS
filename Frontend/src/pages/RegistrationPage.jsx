@@ -63,7 +63,7 @@ export default function RegistrationPage() {
         mail: form.mail,
         telefono: form.telefono,
         contrasena: form.contrasena,
-        tipo: false // puedes ajustar si es admin o no
+        tipo: true // puedes ajustar si es admin o no
       };
       users.push(newUser);
       localStorage.setItem('users', JSON.stringify(users));
