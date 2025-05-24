@@ -3,6 +3,9 @@
 import { Router } from "express";
 import reservaRouter from "./reservaRoutes.js";
 import checkinRouter from "./check-inRoutes.js";
+//paso 4 importar el router de habitaciones
+import habitacionesRouter from "./habitacionesRoutes.js";
+
 const router = Router();
 
 
@@ -13,6 +16,8 @@ router.get('/', (req, res, next) => {res.send('Home')})
 router.use('/Reserva', reservaRouter)
 
 router.use('/Check-in', checkinRouter)
+//paso1 crear el router
+router.use('/Habitaciones', habitacionesRouter)
 
 
 
