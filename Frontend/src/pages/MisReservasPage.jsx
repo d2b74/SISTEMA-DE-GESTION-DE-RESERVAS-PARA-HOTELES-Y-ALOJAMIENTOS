@@ -75,16 +75,16 @@ export default function MisReservasPage() {
               <Card className="reserva-card h-100">
                 <Card.Img
                   variant="top"
-                  src={res.room.url}
+                  src={res.room.url[0]}
                   className="reserva-img"
                 />
                 <Card.Body className="d-flex flex-column">
                   <Card.Title className="reserva-title">{res.room.title}</Card.Title>
-                  <Card.Text className="reserva-details flex-grow-1">
+                  <div className="reserva-details flex-grow-1">
                     <div><strong>Fechas:</strong> {res.checkIn} → {res.checkOut}</div>
                     <div><strong>Personas:</strong> {res.people}</div>
                     <div><strong>Precio:</strong> ${res.price}</div>
-                  </Card.Text>
+                  </div>
                   <div className="d-flex flex-wrap justify-content-between reserva-actions">
                     {!res.checkInConfirmed ? (
                       <>

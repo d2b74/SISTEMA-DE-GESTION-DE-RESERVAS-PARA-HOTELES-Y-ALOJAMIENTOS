@@ -8,13 +8,13 @@ export const getHabitacionByIdRequest = (id) => axios.get(`/Habitaciones/${id}`)
 
 // Crear una habitación
 export const crearHabitacionRequest = (habitacion) => 
-  axios.post('/Habitaciones', habitacion, {
+  axios.post('/Habitaciones', {habitacion}, {
     headers: { 'Content-Type': 'application/json' }
   })
 
 // Editar una habitación
 export const editarHabitacionRequest = (id, data) =>
-  axios.put(`/Habitaciones/${id}`, data, {
+  axios.put(`/Habitaciones/${id}`, { habitacion: data }, {
     headers: { 'Content-Type': 'application/json' }
   })
 

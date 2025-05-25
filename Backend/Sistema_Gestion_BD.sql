@@ -50,6 +50,13 @@ CREATE TABLE habitacion (
     FOREIGN KEY (estado) REFERENCES estado_habitacion(id_estado),
     FOREIGN KEY (tipo) REFERENCES tipo_habitacion(id_tipo_habitacion)--SE SACO EL FOREIGN KEY DE SERVICIO    
 );
+CREATE TABLE imagen_habitacion (
+    id_imagen INT AUTO_INCREMENT PRIMARY KEY,
+    id_habitacion INT,
+    url TEXT NOT NULL,
+    orden INT DEFAULT 0,
+    FOREIGN KEY (id_habitacion) REFERENCES habitacion(id_habitacion) ON DELETE CASCADE
+);
 
 CREATE TABLE servicio_habitacion (
     id_habitacion INT,

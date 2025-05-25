@@ -29,14 +29,14 @@ export default function Gallery({ images }) {
               <div className="gallery-card__img-wrapper">
                 <Card.Img
                   variant="top"
-                  src={room.url}
+                  src={room.url[0]}
                   alt={room.title}
                   className="gallery-card__img"
                 />
               </div>
               <Card.Body className="text-center">
                 <Card.Title className="gallery-card__title">
-                  {room.title}
+                    {room.numero ? `Habitación ${room.numero}` : 'Habitación'}
                 </Card.Title>
               </Card.Body>
             </Card>
