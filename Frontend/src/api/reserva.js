@@ -7,12 +7,14 @@ export const getReservasRequest = () => axios.get('/Reserva')
 export const getReservaByIdRequest = (id) => axios.get(`/Reserva/${id}`)
 
 // Crear una nueva reserva
-export const crearReservaRequest = (reserva) => {
-   console.log('Reserva a crear:', {reserva});
-  axios.post('/Reserva', {reserva}, {
-    
+export const crearReservaRequest = async (reserva) => {
+  console.log('Reserva a crear:', { reserva });
+  const res = await axios.post('/Reserva', { reserva }, {
     headers: { 'Content-Type': 'application/json' }
-  })}
+  });
+  return res.data; 
+};
+
 
 // Editar una reserva existente
 export const editarReservaRequest = (id, data) =>
