@@ -1,6 +1,7 @@
 // src/context/ReservationsContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
+import { crearReservaRequest } from '../api/reserva'
 
 const ReservationsContext = createContext();
 
@@ -17,7 +18,7 @@ export function ReservationsProvider({ children }) {
   }, [reservations]);
 
   // Añadir nueva reserva, asociada al usuario actual
-  const addReservation = (booking) => {
+/*   const addReservation = (booking) => {
     if (!user) return;
     const newRes = {
       ...booking,
@@ -27,6 +28,28 @@ export function ReservationsProvider({ children }) {
     };
     setReservations(prev => [...prev, newRes]);
     return newRes;
+  }; */
+    const addReservation = async (payload) => {
+      
+    try {
+      
+      const { reserva } = payload; // destructuramos solo lo necesario
+      const res = await crearReservaRequest(reserva);
+       if (!user) return;
+    const newRes = {
+      ...payload,
+      id: Date.now(),
+      userEmail: user.mail,
+      checkInConfirmed: false
+    };
+      // Opcional: actualizar el estado local con la nueva reserva
+      setReservations(prev => [...prev, newRes]);
+
+      return newRes;
+    } catch (err) {
+      console.error('Error al crear reserva:', err);
+      throw err;
+    }
   };
 
   // Actualizar reserva existente
