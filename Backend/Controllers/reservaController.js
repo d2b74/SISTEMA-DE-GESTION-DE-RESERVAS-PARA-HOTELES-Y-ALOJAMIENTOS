@@ -68,3 +68,45 @@ export const Reserva = {
     updateReserva: asyncHandler(reservaController.updateReserva),
     deleteReserva: asyncHandler(reservaController.deleteReserva),
 };
+/* to-do list
+1. Entrada del usuario:
+Tipo de habitación deseada 
+
+Fechas de entrada y salida
+
+Cantidad de habitaciones 
+Otros datos (cliente, servicios, etc.)
+
+2. Validaciones iniciales:
+Verificar que las fechas sean válidas (fecha_fin > fecha_inicio)
+
+Verificar que las fechas no estén en el pasado
+
+Verificar que el tipo de habitación exista
+
+3. Buscar disponibilidad:
+Obtener todas las habitaciones activas del tipo solicitado
+(ej: todas las “dobles”)
+
+Filtrar esas habitaciones para ver cuáles están ocupadas en el rango solicitado
+(comparar contra reservas existentes en Reserva unidas con reserva_habitacion)
+
+Identificar las habitaciones libres
+(todas menos las ocupadas en ese rango)
+
+Verificar si hay suficientes habitaciones libres para cubrir la solicitud
+(si pidió 2 habitaciones, por ejemplo)
+
+4. Si hay disponibilidad:
+Crear la reserva en la tabla Reserva
+(fecha_inicio, fecha_fin, cliente, etc.)
+
+Enlazar las habitaciones elegidas con esa reserva en la tabla intermedia reserva_habitacion
+(con los IDs de la reserva y las habitaciones)
+
+5. Confirmar y responder al usuario:
+Mostrar mensaje de éxito con el ID de la reserva y detalles
+
+O bien error en caso de que no haya disponibilidad
+
+ */

@@ -1,0 +1,19 @@
+.admin-main {
+  padding: 1rem;
+}
+
+.room-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.status-badge {
+  font-size: 0.9rem;
+  padding: 0.5em;
+    background-color: #fd7e14;
+  color: white;
+}
+
+.admin-actions Button {
+  min-width: 120px;
+}

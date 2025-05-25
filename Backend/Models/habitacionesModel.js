@@ -3,16 +3,36 @@ import { pool } from "../db.js"; // 1 Importar la conexión a la base de datos y
 
 export const habitacionModel = {
   // Obtener todas las habitaciones
-  getHabitaciones: async () => {
-    const [rows] = await pool.query("SELECT * FROM habitacion");
-    return rows;
-  },
+
+
 
   // Obtener una habitación por ID
-  getHabitacionById: async (id) => {
-    const [rows] = await pool.query("SELECT * FROM habitacion WHERE id_habitacion = ?", [id]);
-    return rows[0];
-  },
+ getHabitaciones: async () => {
+  const [rows] = await pool.query(`
+    SELECT 
+      h.id_habitacion,
+      h.numero,
+      eh.nombre AS estado,
+      th.nombre AS tipo,
+      h.precio,
+      h.descripcion,
+      (
+        SELECT JSON_ARRAYAGG(ordenadas.url)
+        FROM (
+          SELECT i.url
+          FROM imagen_habitacion i
+          WHERE i.id_habitacion = h.id_habitacion
+          ORDER BY i.orden
+        ) AS ordenadas
+      ) AS url
+    FROM habitacion h
+    LEFT JOIN estado_habitacion eh ON h.estado = eh.id_estado
+    LEFT JOIN tipo_habitacion th ON h.tipo = th.id_tipo_habitacion;
+  `);
+  return rows;
+},
+
+
 
   // Crear una nueva habitación
   createHabitacion: async (data) => {

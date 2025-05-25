@@ -6,7 +6,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useReservations } from '../context/ReservationsContext';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './AlquilerYPage.css';
 
 export default function AlquilerYPage() {
@@ -16,16 +16,14 @@ export default function AlquilerYPage() {
   const [localCheckIn, setLocalCheckIn] = useState(booking.checkIn || '');
   const [localCheckOut, setLocalCheckOut] = useState(booking.checkOut || '');
   const [localPeople, setLocalPeople] = useState(booking.people || 1);
-  const { addReservation, updateReservation ,isRoomAvailable} = useReservations();
+  const { addReservation, updateReservation, isRoomAvailable } = useReservations();
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Sincronizar context cuando cambien local states
   useEffect(() => {
     setBooking(b => ({ ...b, checkIn: localCheckIn, checkOut: localCheckOut, people: localPeople }));
   }, [localCheckIn, localCheckOut, localPeople, setBooking]);
 
-  // Validaciones antes de reservar
   const validateBooking = () => {
     if (!user) {
       alert('Debes iniciar sesión para hacer una reserva.');
@@ -40,7 +38,6 @@ export default function AlquilerYPage() {
       alert('La fecha de check-out debe ser posterior al check-in.');
       return false;
     }
-    // **Validación de disponibilidad**
     if (!isRoomAvailable(room.id, localCheckIn, localCheckOut)) {
       alert('La habitación ya está reservada en esas fechas. Elige otras.');
       return false;
@@ -57,10 +54,20 @@ export default function AlquilerYPage() {
       checkIn: localCheckIn,
       checkOut: localCheckOut,
       people: localPeople,
-      price: room.price
-    };
-    let message;
+      price: room.price,
+      userEmail: user.mail,
 
+      // NUEVO: estructura que espera el backend
+      reserva: {
+        id_huesped: user.id_hueped,  // asumiendo que `user` tiene `id`
+        fecha_inicio: localCheckIn,
+        fecha_fin: localCheckOut,
+        estado: 1,
+        habitaciones: [room.id_habitacion]
+      }
+    };
+
+    let message;
     if (isConfirmed) {
       await updateReservation({ ...booking, ...payload });
       message = 'Reserva actualizada con éxito';
@@ -69,14 +76,14 @@ export default function AlquilerYPage() {
       message = 'Reserva creada con éxito';
     }
 
-    // Resetear formulario y estado de booking para nueva reserva
     setLocalCheckIn('');
     setLocalCheckOut('');
     setLocalPeople(1);
     setBooking({ checkIn: '', checkOut: '', people: 1, room: null, isConfirmed: false });
 
-    // Redirigir a Galería con mensaje
-    navigate("/gallery#gallery", { state: { alert: { variant: 'success', text: message } } });
+    navigate("/gallery#gallery", {
+      state: { alert: { variant: 'success', text: message } }
+    });
   };
 
   if (!room) {
@@ -86,72 +93,73 @@ export default function AlquilerYPage() {
       </Container>
     );
   }
+
   return (
     <>
       <Header />
-        <section className="alquiler-page">
-          <Container fluid className="px-0 alquiler-wrapper">
-            <Row noGutters className="align-items-stretch">
-              <Col xs={12} lg={6} className="alquiler-left p-0">
-                {room && (
-                  <div className="img-mask">
-                    <img src={room.url} alt={room.title} className="alquiler-img" />
-                  </div>
-                )}
-              </Col>
-              <Col xs={12} lg={6} className="alquiler-right">
-                <div className="panel desc-panel">
-                  <h3>{room?.title || 'Selecciona una habitación'}</h3>
-                  <p>{room?.description || 'Elige una habitación desde la galería.'}</p>
+      <section className="alquiler-page">
+        <Container fluid className="px-0 alquiler-wrapper">
+          <Row className="align-items-stretch">
+            <Col xs={12} lg={6} className="alquiler-left p-0">
+              {room && (
+                <div className="img-mask">
+                  <img src={room.url[0]} alt={room.title} className="alquiler-img" />
                 </div>
-                <div className="panel prefs-panel">
-                  <div className="prefs-header">
-                    <span className="price">${room?.price || '--'}</span>
-                    <small>por {localPeople} noche(s)</small>
-                  </div>
-                  <Form>
-                    <Form.Group className="mb-3" controlId="checkIn">
-                      <Form.Label>Desde</Form.Label>
-                      <Form.Control
-                        type="date"
-                        min={today}
-                        value={localCheckIn}
-                        onChange={e => setLocalCheckIn(e.target.value)}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="checkOut">
-                      <Form.Label>Hasta</Form.Label>
-                      <Form.Control
-                        type="date"
-                        min={localCheckIn || today}
-                        value={localCheckOut}
-                        onChange={e => setLocalCheckOut(e.target.value)}
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="people">
-                      <Form.Label>Personas</Form.Label>
-                      <Form.Select
-                        value={localPeople}
-                        onChange={e => setLocalPeople(Number(e.target.value))}
-                      >
-                        {[1,2,3,4,5].map(n => (
-                          <option key={n} value={n}>{n}</option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                  </Form>
-                  <Button
-                    variant="primary"
-                    className="w-100"
-                    onClick={handleSubmit}
-                  >
-                    Reservar
-                  </Button>
+              )}
+            </Col>
+            <Col xs={12} lg={6} className="alquiler-right">
+              <div className="panel desc-panel">
+                <h3>{'Habitacion ' + room?.numero || 'Selecciona una habitación'}</h3>
+                <p>{room?.descripcion || 'Elige una habitación desde la galería.'}</p>
+              </div>
+              <div className="panel prefs-panel">
+                <div className="prefs-header">
+                  <span className="price">${room?.precio || '--'}</span>
+                  <small>por {localPeople} noche(s)</small>
                 </div>
-              </Col>
-            </Row>
-          </Container>
-        </section>
+                <Form>
+                  <Form.Group className="mb-3" controlId="checkIn">
+                    <Form.Label>Desde</Form.Label>
+                    <Form.Control
+                      type="date"
+                      min={today}
+                      value={localCheckIn}
+                      onChange={e => setLocalCheckIn(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3" controlId="checkOut">
+                    <Form.Label>Hasta</Form.Label>
+                    <Form.Control
+                      type="date"
+                      min={localCheckIn || today}
+                      value={localCheckOut}
+                      onChange={e => setLocalCheckOut(e.target.value)}
+                    />
+                  </Form.Group>
+                  <Form.Group className="mb-3" controlId="people">
+                    <Form.Label>Personas</Form.Label>
+                    <Form.Select
+                      value={localPeople}
+                      onChange={e => setLocalPeople(Number(e.target.value))}
+                    >
+                      {[1, 2, 3, 4, 5].map(n => (
+                        <option key={n} value={n}>{n}</option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Form>
+                <Button
+                  variant="primary"
+                  className="w-100"
+                  onClick={handleSubmit}
+                >
+                    {isConfirmed ? 'Modificar' : 'Reservar'}
+                </Button>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
       <Footer />
     </>
   );
