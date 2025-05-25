@@ -57,13 +57,14 @@ export default function RegistrationPage() {
 
       // Agregar nuevo usuario
       const newUser = {
+        id_hueped: 2 ,
         nombre: form.nombre,
         apellido: form.apellido,
         dni: form.dni,
         mail: form.mail,
         telefono: form.telefono,
         contrasena: form.contrasena,
-        tipo: true // puedes ajustar si es admin o no
+        tipo: false // puedes ajustar si es admin o no
       };
       users.push(newUser);
       localStorage.setItem('users', JSON.stringify(users));
