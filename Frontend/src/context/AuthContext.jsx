@@ -1,14 +1,28 @@
 // src/context/AuthContext.jsx
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null); // null = no autenticado
+  // Inicializa desde localStorage para mantener sesión entre recargas
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('currentUser');
+    return saved ? JSON.parse(saved) : null;
+  });
 
-  const login = (email) => {
-    setUser({ email });
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('currentUser', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('currentUser');
+    }
+  }, [user]);
+
+  // login recibe el objeto completo de usuario con propiedades 'mail', 'dni', etc.
+  const login = (userData) => {
+    setUser(userData);
   };
+
   const logout = () => {
     setUser(null);
   };

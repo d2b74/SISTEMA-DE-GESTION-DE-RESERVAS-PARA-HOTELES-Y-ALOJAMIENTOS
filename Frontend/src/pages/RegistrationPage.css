@@ -1,0 +1,44 @@
+/* src/pages/RegistrationPage.css */
+
+.registration-page {
+  background: url('/path/to/background.jpg') no-repeat center/cover;
+  min-height: 100vh;
+}
+
+.registration-card {
+  width: 384px;
+  padding: 2rem;
+  background: rgba(255,255,255,0.6);
+  border-radius: 1rem;
+  position: relative;
+}
+
+.registration-title {
+  font-family: 'Great Vibes', cursive;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #5747A1;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: #333;
+}
+
+.btn-custom {
+  border-radius: 50px;
+  background: rgba(175,175,175,0.5);
+  color: #000;
+}
+
+.btn-google {
+  border-radius: 50px;
+  color: #000;
+  border: 1px solid rgba(175,175,175,0.5);
+}
+
+.form-control.is-invalid {
+  background: rgba(255, 0, 0, 0.05);
+}
