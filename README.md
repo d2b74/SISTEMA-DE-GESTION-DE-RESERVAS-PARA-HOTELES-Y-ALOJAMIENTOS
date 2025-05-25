@@ -19,6 +19,37 @@ El objetivo es digitalizar operaciones clave de hoteles pequeños y medianos, me
 
 ## 🔧 Instalación (backend)
 
-1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/usuario/repositorio.git
+# 🛠 Instrucciones para Clonado y Ejecución Local
+
+Este proyecto está dividido en dos partes: **backend (Node.js)** y **frontend (React con Vite)**. Ambos deben ejecutarse de forma local.
+
+---
+
+## 🔄 1. Clonar el Repositorio
+
+```bash
+git clone https://github.com/d2b74/SISTEMA-DE-GESTION-DE-RESERVAS-PARA-HOTELES-Y-ALOJAMIENTOS.git
+cd SISTEMA-DE-GESTION-DE-RESERVAS-PARA-HOTELES-Y-ALOJAMIENTOS
+
+
+🚀 2. Iniciar el Backend
+cd Backend
+npm install
+npm run dev
+
+🔹 El backend corre en: http://localhost:3001
+
+💻 3. Iniciar el Frontend
+En una nueva terminal o pestaña:
+cd Frontend
+npm install
+npm run dev
+
+🔹 El frontend corre en: http://localhost:5173
+
+✅ Orden de Ejecución
+Primero ejecutá el backend (npm run dev en la carpeta Backend)
+
+
+Después ejecutá el frontend (npm run dev en la carpeta Frontend)
+
