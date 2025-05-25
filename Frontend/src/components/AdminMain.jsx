@@ -6,23 +6,11 @@ import { useRooms } from '../context/RoomsContext';
 import './AdminMain.css';
 
 const statusVariant = {
-  Disponible: 'success',
-  Ocupado: 'danger',
-  Limpieza: 'info',
-};
-//sacar esto cuando el back-end esté listo
-const tipoTexto = {
-  1: 'Single',
-  2: 'Doble',
-  3: 'Twin',
-  4: 'Suite',
-  5: 'Familiar',
-};
-
-const estadoTexto = {
-  1: 'Disponible',
-  2: 'Ocupado',
-  3: 'Limpieza',
+  Limpia: 'success',             // Lista para ocupar
+  Ocupada: 'info',            // Con huésped
+  Mantenimiento: 'orange',     // Tareas de mantenimiento
+  Reservada: 'warning',            // Asignada a reserva futura
+  'Fuera de servicio': 'secondary' // No disponible
 };
 
 export default function AdminMain() {
@@ -30,39 +18,33 @@ export default function AdminMain() {
 
   if (loading) return <Spinner animation="border" className="m-auto" />;
   if (error) return <Alert variant="danger">{error}</Alert>;
-  
-    // Transformamos las habitaciones para usar en la UI
-  //sacar esto cuando el back-end esté listo
-  const mappedRooms = rooms.map(room => ({
-    id: room.id_habitacion,
-    number: room.numero,
-    type: tipoTexto[room.tipo] || `Tipo ${room.tipo}`,
-    price: parseFloat(room.precio),
-    status: estadoTexto[room.estado] || 'Desconocido',
-  }));
 
   return (
     <div className="admin-main">
       <Row xs={1} sm={2} md={3} className="g-4">
-        {mappedRooms.map(room => (
-          <Col key={room.id}>
+        {rooms.map(room => (
+          <Col key={room.id_habitacion}>
             <Card className="room-card">
               <Card.Body>
-                <Card.Title>Habitación Nº {room.number}</Card.Title>
+                <Card.Title>Habitación Nº {room.numero}</Card.Title>
+
                 <div className="d-flex align-items-center mb-2">
-                  <FaBed className="me-2" /> Tipo: {room.type}
+                  <FaBed className="me-2" /> Tipo: {room.tipo}
                 </div>
+
                 <div className="d-flex align-items-center mb-2">
-                  <FaConciergeBell className="me-2" /> Precio: ${room.price}
+                  <FaConciergeBell className="me-2" /> Precio: ${parseFloat(room.precio)}
                 </div>
-                <Badge bg={statusVariant[room.status]} className="status-badge">
-                  {room.status}
+
+                <Badge bg={statusVariant[room.estado] || 'secondary'} className="status-badge">
+                  {room.estado}
                 </Badge>
               </Card.Body>
             </Card>
           </Col>
         ))}
       </Row>
+
       <div className="admin-actions mt-4 text-center">
         <Button variant="outline-primary" className="me-3">Crear</Button>
         <Button variant="outline-secondary" className="me-3">Modificar</Button>

@@ -10,6 +10,8 @@
 .status-badge {
   font-size: 0.9rem;
   padding: 0.5em;
+    background-color: #fd7e14;
+  color: white;
 }
 
 .admin-actions Button {

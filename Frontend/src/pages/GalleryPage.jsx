@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import HeroSearch from '../components/HeroSearch';
 import Footer from '../components/Footer';
 import Gallery from '../components/Gallery';
-import roomImages from '../data/roomImages';
+//import roomImages from '../data/roomImages';
 import './GalleryPage.css';
 import { useLocation } from 'react-router-dom';
 import { useRooms } from '../context/RoomsContext';
@@ -30,14 +30,11 @@ export default function GalleryPage() {
   if (loading) return <Spinner animation="border" className="m-auto" />;
   if (error) return <Alert variant="danger">{error}</Alert>;
  // Combinamos datos reales con imágenes locales
- //eliminar esto cuando el back-end esté listo
-  const galleryRooms = rooms.map((room, idx) => ({
-    id: room.id_habitacion,
-    url: roomImages[idx % roomImages.length], // circular si hay más habitaciones que imágenes
-    title: `Habitación ${room.numero}`,
-    description: room.descripcion || 'Una habitación cómoda y equipada.',
-    price: parseFloat(room.precio),
-  }));
+/*  //eliminar esto cuando el back-end esté listo
+const galleryRooms = rooms.map((room, idx) => ({
+  ...room,
+  url: roomImages[idx % roomImages.length], // agregamos la imagen sin cambiar los atributos existentes
+})); */
 
   return (
     <>
@@ -56,7 +53,7 @@ export default function GalleryPage() {
               {alertInfo.text}
             </Alert>
           )}
-          <Gallery images={galleryRooms} />
+          <Gallery images={rooms} />
         </Container>
       </section>
 
