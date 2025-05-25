@@ -12,7 +12,7 @@ import './CheckInPage.css';
 export default function CheckInPage() {
   const { booking } = useBooking();
   const { user } = useAuth();
-  const { updateReservation } = useReservations();
+  const { updateReservation , doCheckin} = useReservations();
   const navigate = useNavigate();
 
   // Calcular noches y total
@@ -28,6 +28,7 @@ export default function CheckInPage() {
       checkInConfirmed: true,
       userEmail: user.mail,
     });
+    doCheckin ( booking.id ,user.dni)
     alert('Check-in confirmado con éxito');
     navigate('/reservas');
   };
@@ -43,8 +44,8 @@ export default function CheckInPage() {
               <ListGroup.Item><strong>Nombre:</strong> {user.nombre} {user.apellido}</ListGroup.Item>
               <ListGroup.Item><strong>DNI:</strong> {user.dni}</ListGroup.Item>
               <ListGroup.Item><strong>Email:</strong> {user.mail}</ListGroup.Item>
-              <ListGroup.Item><strong>Habitación:</strong> {booking.room.title}</ListGroup.Item>
-              <ListGroup.Item><strong>Precio/noche:</strong> ${booking.room.price}</ListGroup.Item>
+              <ListGroup.Item><strong>Habitación:</strong> {booking.room.nombre}</ListGroup.Item>
+              <ListGroup.Item><strong>Precio/noche:</strong> ${booking.room.numero}</ListGroup.Item>
               <ListGroup.Item><strong>Fechas:</strong> {booking.checkIn} → {booking.checkOut}</ListGroup.Item>
               <ListGroup.Item><strong>Noches:</strong> {nights || '--'}</ListGroup.Item>
               <ListGroup.Item><strong>Personas:</strong> {booking.people}</ListGroup.Item>

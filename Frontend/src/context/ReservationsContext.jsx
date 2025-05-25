@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { crearReservaRequest } from '../api/reserva'
+import { crearCheckinRequest } from '../api/checkIn'
 
 const ReservationsContext = createContext();
 
@@ -36,12 +37,12 @@ export function ReservationsProvider({ children }) {
       const { reserva } = payload; // destructuramos solo lo necesario
       const res = await crearReservaRequest(reserva);
        if (!user) return;
-    const newRes = {
+       const newRes = {
       ...payload,
-      id: Date.now(),
+      id: res.id_reserva,
       userEmail: user.mail,
       checkInConfirmed: false
-    };
+      };
       // Opcional: actualizar el estado local con la nueva reserva
       setReservations(prev => [...prev, newRes]);
 
@@ -77,6 +78,23 @@ export function ReservationsProvider({ children }) {
     });
   };
 
+const doCheckin = async (reserva, userId) => {
+  try {
+    const checkinData = {
+      id_reserva: reserva,
+      usuario: false,
+      descripcion: 'Check-in normal', // puedes personalizarlo luego
+      hora : new Date().toISOString().replace('T', ' ').substring(0, 19)
+    };
+    await crearCheckinRequest(checkinData);
+    alert('Check-in exitoso');
+  } catch (err) {
+    console.error('Error al hacer check-in:', err);
+    alert('Error al hacer check-in');
+  }
+};
+
+
   return (
     <ReservationsContext.Provider
       value={{
@@ -85,7 +103,8 @@ export function ReservationsProvider({ children }) {
         addReservation,
         updateReservation,
         deleteReservation,
-        isRoomAvailable
+        isRoomAvailable,
+        doCheckin
       }}
     >
       {children}
