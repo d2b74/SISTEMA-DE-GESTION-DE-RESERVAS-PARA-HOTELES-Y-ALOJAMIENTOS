@@ -1,15 +1,24 @@
 import { z } from "zod";
 
-const mysqlDatetimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+// Regex que acepta sólo “YYYY-MM-DD” (fecha sin hora)
+const mysqlDateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
 export const reservaSchema = z.object({
   id_huesped: z.number().int().positive("ID del huésped inválido"),
-  fecha_fin: z.string().regex(mysqlDatetimeRegex, {
-    message: "Formato de fecha y hora inválido. Debe ser YYYY-MM-DD HH:mm:ss",
-  }),ha_fin: z.string().regex(mysqlDatetimeRegex, {
-    message: "Formato de fecha y hora inválido. Debe ser YYYY-MM-DD HH:mm:ss",
+
+  fecha_inicio: z.string().regex(mysqlDateRegex, {
+    message: "Formato de fecha inválido. Debe ser YYYY-MM-DD",
   }),
+
+  fecha_fin: z.string().regex(mysqlDateRegex, {
+    message: "Formato de fecha inválido. Debe ser YYYY-MM-DD",
+  }),
+
   estado: z.number().int().positive("Estado de reserva inválido"),
+
+  habitaciones: z
+    .array(z.number().int().positive("ID de habitación inválido"))
+    .optional(), // quitar .optional() si debe llevar al menos una
 });
 
 export function validateReserva(data) {

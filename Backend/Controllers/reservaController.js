@@ -69,13 +69,17 @@ export const Reserva = {
     deleteReserva: asyncHandler(reservaController.deleteReserva),
 };
 /* to-do list
-1. Entrada del usuario:
+1. Al insertar nueva reserva del usuario:
+No se verifica si el huesped existe en la base de datos
+ver si el id del huesped existe 
 Tipo de habitación deseada 
 
 Fechas de entrada y salida
+que las fechas sean correctas , la salida posterior a la entrada
 
-Cantidad de habitaciones 
-Otros datos (cliente, servicios, etc.)
+Cantidad de habitaciones cargar la tabla con los datos 
+
+Otros datos (cliente, servicios, etc.) servicios extras si se eligieron hay que agregarlos
 
 2. Validaciones iniciales:
 Verificar que las fechas sean válidas (fecha_fin > fecha_inicio)
