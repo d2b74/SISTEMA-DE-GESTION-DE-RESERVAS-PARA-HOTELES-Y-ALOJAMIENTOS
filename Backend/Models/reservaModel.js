@@ -1,5 +1,6 @@
 //import { pool } from '../config/db.js';
 import { pool } from '../db.js'; // Importar la conexión a la base de datos
+
 export const reservaModel = {
     
     // Obtener todas las reservas con datos de huésped y usuario
