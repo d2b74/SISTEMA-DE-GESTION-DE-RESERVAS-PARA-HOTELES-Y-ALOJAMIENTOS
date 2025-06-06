@@ -3,6 +3,7 @@
 import { Router } from "express";
 import reservaRouter from "./reservaRoutes.js";
 import checkinRouter from "./check-inRoutes.js";
+import tempodasRouter from "./temporadasRoutes.js"; // Importar el router de temporadas
 //paso 4 importar el router de habitaciones
 import habitacionesRouter from "./habitacionesRoutes.js";
 
@@ -18,6 +19,8 @@ router.use('/Reserva', reservaRouter)
 router.use('/Check-in', checkinRouter)
 //paso1 crear el router
 router.use('/Habitaciones', habitacionesRouter)
+
+router.use('/Temporadas', tempodasRouter) // Usar el router de temporadas
 
 
 
