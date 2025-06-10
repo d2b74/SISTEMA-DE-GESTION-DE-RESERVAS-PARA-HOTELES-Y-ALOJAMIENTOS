@@ -80,12 +80,18 @@ export function ReservationsProvider({ children }) {
 
 const doCheckin = async (reserva, userId) => {
   try {
+    const now = new Date();
+    const fecha = now.toISOString().split('T')[0];             // "YYYY-MM-DD"
+    const hora  = now.toTimeString().split(' ')[0];            // "HH:mm:ss"
+
     const checkinData = {
       id_reserva: reserva,
-      usuario: false,
-      descripcion: 'Check-in normal', // puedes personalizarlo luego
-      hora : new Date().toISOString().replace('T', ' ').substring(0, 19)
+      usuario:    false,                                       // o userId === algo?
+      descripcion:'Check-in normal',
+      fecha,
+      hora
     };
+
     await crearCheckinRequest(checkinData);
     alert('Check-in exitoso');
   } catch (err) {

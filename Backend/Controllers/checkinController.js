@@ -73,5 +73,6 @@ export const Checkin = {
 //endpoint temporada 
 //endpoint de encuestas
 //endpoint de reportes
+//endpoint de checkout
 //endpoint de promocion para que aplique a las tarifas
 //cambi

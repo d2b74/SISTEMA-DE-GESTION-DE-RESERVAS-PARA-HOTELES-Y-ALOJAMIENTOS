@@ -10,14 +10,18 @@ export const checkinModel = {
     const [rows] = await pool.query("SELECT * FROM checkin WHERE id_checkin = ?", [id]);
     return rows[0];
   },
-  createCheckin: async (data) => {
-    const { id_reserva, descripcion, usuario, hora } = data;
+
+  createCheckin: async (data) => {      
+    const { id_reserva, descripcion, usuario, fecha, hora } = data;
     const [result] = await pool.query(
-      "INSERT INTO checkin (id_reserva, descripcion, usuario, hora) VALUES (?, ?, ?, ?)",
-      [id_reserva, descripcion, usuario, hora]
+      `INSERT INTO checkin
+       (id_reserva, descripcion, usuario, fecha, hora)
+       VALUES (?, ?, ?, ?, ?)`,
+      [id_reserva, descripcion || null, usuario, fecha, hora]
     );
-    return { id: result.insertId, ...data };
+    return { id: result.insertId, id_reserva, descripcion, usuario, fecha, hora };
   },
+
   updateCheckin: async (id, data) => {
     const [result] = await pool.query("UPDATE checkin SET ? WHERE id_checkin = ?", [data, id]);
     return result;
