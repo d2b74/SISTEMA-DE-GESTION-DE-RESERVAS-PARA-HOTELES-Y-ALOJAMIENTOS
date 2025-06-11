@@ -6,9 +6,9 @@ import checkinRouter from "./check-inRoutes.js";
 import tempodasRouter from "./temporadasRoutes.js"; // Importar el router de temporadas
 //paso 4 importar el router de habitaciones
 import habitacionesRouter from "./habitacionesRoutes.js";
+import promocionesRouter from "./promocionesRoutes.js"; // Importar el router de promociones
 
 const router = Router();
-
 
 //Renderiza pagina el login como home 
 router.get('/', (req, res, next) => {res.send('Home')})
@@ -22,7 +22,7 @@ router.use('/Habitaciones', habitacionesRouter)
 
 router.use('/Temporadas', tempodasRouter) // Usar el router de temporadas
 
-
+router.use('/Promociones',promocionesRouter) // Usar el router de promociones
 
 //visualiza 404 con cualquier ruta no definida
 router.use((req, res, next) => {
