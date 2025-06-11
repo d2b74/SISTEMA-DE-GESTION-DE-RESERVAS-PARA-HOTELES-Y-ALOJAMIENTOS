@@ -64,15 +64,3 @@ export const Checkin = {
   updateCheckin: asyncHandler(checkinController.updateCheckin),
   deleteCheckin: asyncHandler(checkinController.deleteCheckin),
 };
-
-
-//la reserva debe existir y que el estado sea
-//falta cambiar la tabla de check-in guarde hora y fecha
-//falta controlador check-out 
-// hacer endpoint de usuarios (login-logout)
-//endpoint temporada 
-//endpoint de encuestas
-//endpoint de reportes
-//endpoint de checkout
-//endpoint de promocion para que aplique a las tarifas
-//cambi
