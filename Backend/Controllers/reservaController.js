@@ -21,10 +21,22 @@ export class reservaController {
         }
     };
 
+    // 🔥 Obtener reservas por huésped
+    static getReservasPorHuesped = async (req, res) => {
+        const { id } = req.params;
+        try {
+        const reservas = await reservaModel.getReservasPorHuesped(id);
+        res.status(200).json(reservas);
+        } catch (err) {
+        console.error('Error al traer reservas:', err);
+        res.status(500).json({ message: 'Error al obtener reservas' });
+        }
+    };
+    
     // Crear una reserva
     static createReservaHandler = async (req, res) => {
-        const reserva = req.body.reserva;
-        const  reservaValid = validateReserva(reserva);
+        //const reserva = validateReserva(req.body);
+        const  reservaValid = validateReserva(req.body);
          if (!reservaValid.success) {
             return res.status(400).json({ message: reservaValid.error.errors });
         }     
@@ -33,16 +45,16 @@ export class reservaController {
     };
 
     // Actualizar una reserva
+
     static updateReserva = async (req, res) => {
         const id = req.params.id;
-        const reserva = req.body.reserva;
-        const reservaValid = validatePartialReserva(reserva);
+        const reservaValid = validatePartialReserva(req.body);
         if (!reservaValid.success) {
             return res.status(400).json({ message: reservaValid.error.errors });
         }
-        const affectedRows = await reservaModel.updateReserva(reservaValid.data, id);
-        if (affectedRows > 0) {
-            res.status(200).json({ message: 'Reserva actualizada' });
+        const updated = await reservaModel.updateReserva(reservaValid.data, id);
+        if (updated) {
+            res.status(200).json({ message: 'Reserva actualizada correctamente' });
         } else {
             res.status(404).json({ message: 'Reserva no encontrada' });
         }
@@ -51,7 +63,7 @@ export class reservaController {
     // Eliminar una reserva
     static deleteReserva = async (req, res) => {
         const id = req.params.id;
-        const response = await reservaModel.deleteReserva(id);
+        const response = await reservaModel.cancelReserva(id);
         if (response > 0) {
             res.status(200).json({ message: 'Reserva eliminada' });
         } else {
@@ -63,6 +75,7 @@ export class reservaController {
 // Exportar con asyncHandler
 export const Reserva = {
     getReservas: asyncHandler(reservaController.getReservas),
+    getReservasPorHuesped: asyncHandler(reservaController.getReservasPorHuesped),
     getReservaId: asyncHandler(reservaController.getReservaId),
     createReservaHandler: asyncHandler(reservaController.createReservaHandler),
     updateReserva: asyncHandler(reservaController.updateReserva),

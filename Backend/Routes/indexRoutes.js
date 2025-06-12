@@ -9,7 +9,7 @@ import habitacionesRouter from "./habitacionesRoutes.js";
 import promocionesRouter from "./promocionesRoutes.js"; // Importar el router de promociones
 import checkoutRouter from "./check-outRoutes.js"; // Importar el router de check-out
 // Importar el router de check-out
-
+import usuariosRouter from "./usuariosRoutes.js"; 
 const router = Router();
 
 //Renderiza pagina el login como home 
@@ -25,7 +25,7 @@ router.use('/Habitaciones', habitacionesRouter)
 router.use('/Temporadas', tempodasRouter) // Usar el router de temporadas
 
 router.use('/Promociones',promocionesRouter) // Usar el router de promociones
-
+router.use('/Usuarios', usuariosRouter);
 router.use('/Checkout',checkoutRouter) // Usar el router de check-out
 
 //visualiza 404 con cualquier ruta no definida

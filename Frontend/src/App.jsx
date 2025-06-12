@@ -68,6 +68,15 @@ export default function App() {
                 }
               />
               <Route
+                path="/alquiler/:idReserva"
+                element={
+                  <ProtectedRoute>
+                    <AlquilerYPage />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
                 path="/reservas"
                 element={
                   <ProtectedRoute>

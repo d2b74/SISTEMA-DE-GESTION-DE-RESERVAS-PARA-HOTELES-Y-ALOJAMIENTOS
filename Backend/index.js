@@ -6,10 +6,11 @@ import dotenv from 'dotenv'
 //import connection from './db.js';
 import router from './Routes/indexRoutes.js';
 
+
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 app.use(cors({origin:process.env.FRONT_URL, credentials: true}));//para que no haya conflicto con el front
 app.use(express.json());//para que se pueda recibir datos en formato json
@@ -25,6 +26,8 @@ app.get('/test', async (req, res) => {//funcion para comprobar la conexion a la 
 }); */
 
 app.use(router);//llama a las rutas
+
+
 
 app.listen(port, () => {
     console.log(`✅ Servidor escuchando en: http://localhost:${port}`);

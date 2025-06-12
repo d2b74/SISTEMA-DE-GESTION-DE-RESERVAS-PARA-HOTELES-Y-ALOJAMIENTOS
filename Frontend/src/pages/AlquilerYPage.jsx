@@ -6,10 +6,12 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useReservations } from '../context/ReservationsContext';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams} from 'react-router-dom';
+import { getReservaByIdRequest } from '../api/reserva';
 import './AlquilerYPage.css';
 
 export default function AlquilerYPage() {
+  const { idReserva } = useParams();
   const today = new Date().toISOString().split('T')[0];
   const { booking, setBooking } = useBooking();
   const { room, isConfirmed } = booking;
@@ -19,10 +21,57 @@ export default function AlquilerYPage() {
   const { addReservation, updateReservation, isRoomAvailable } = useReservations();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect(() => {
     setBooking(b => ({ ...b, checkIn: localCheckIn, checkOut: localCheckOut, people: localPeople }));
   }, [localCheckIn, localCheckOut, localPeople, setBooking]);
+  
+
+  useEffect(() => {
+    if (booking.isConfirmed && booking.checkIn && booking.checkOut) {
+      setLocalCheckIn(booking.checkIn);
+      setLocalCheckOut(booking.checkOut);
+      setLocalPeople(booking.people);
+    }
+  }, [booking]);
+
+  useEffect(() => {
+    const fetchReserva = async () => {
+      if (!idReserva) return;
+      setIsLoading(true);
+      try {
+        const { data } = await getReservaByIdRequest(idReserva);
+        console.log('Reserva cargada:', data);
+
+        setBooking({
+          id: data.id_reserva,
+          checkIn: data.fecha_inicio.split('T')[0],
+          checkOut: data.fecha_fin.split('T')[0],
+          people: data.personas,
+          room: {
+            id_habitacion: data.id_habitacion,
+            numero: data.numero_habitacion,
+            url: data.urls_habitacion,
+            title: `Habitación ${data.numero_habitacion}`,
+            precio: data.precio
+          },
+          isConfirmed: true
+        });
+
+      } catch (err) {
+        console.error('Error al cargar reserva:', err.response?.data || err.message);
+        alert('No se pudo cargar la reserva');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchReserva();
+  }, [idReserva, setBooking]);
+
+
+
 
   const validateBooking = () => {
     if (!user) {
@@ -38,10 +87,18 @@ export default function AlquilerYPage() {
       alert('La fecha de check-out debe ser posterior al check-in.');
       return false;
     }
-    if (!isRoomAvailable(room.id, localCheckIn, localCheckOut)) {
+    if (!isRoomAvailable(
+          room.id_habitacion,
+          localCheckIn,
+          localCheckOut,
+          isConfirmed ? booking.id : undefined
+        )) {
       alert('La habitación ya está reservada en esas fechas. Elige otras.');
       return false;
     }
+
+
+
 
     return true;
   };
@@ -50,22 +107,16 @@ export default function AlquilerYPage() {
     if (!validateBooking()) return;
 
     const payload = {
-      room,
-      checkIn: localCheckIn,
-      checkOut: localCheckOut,
-      people: localPeople,
-      price: room.price,
-      userEmail: user.mail,
-
-      // NUEVO: estructura que espera el backend
-      reserva: {
-        id_huesped: user.id_hueped,  // asumiendo que `user` tiene `id`
-        fecha_inicio: localCheckIn,
-        fecha_fin: localCheckOut,
-        estado: 1,
-        habitaciones: [room.id_habitacion]
-      }
+      id: booking.id,
+      habitaciones: [room.id_habitacion],
+      id_huesped: user.id_huesped,
+      fecha_inicio: localCheckIn,
+      fecha_fin: localCheckOut,
+      personas: localPeople,
+      precio: room.precio || 0,
+      estado: 1  // Por defecto
     };
+
 
     let message;
     if (isConfirmed) {
@@ -90,6 +141,13 @@ export default function AlquilerYPage() {
     return (
       <Container className="py-5 text-center">
         <h3>Selecciona primero una habitación en la galería.</h3>
+      </Container>
+    );
+  }
+  if (isLoading) {
+    return (
+      <Container className="py-5 text-center">
+        <h3>Cargando datos de la reserva...</h3>
       </Container>
     );
   }
