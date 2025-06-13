@@ -19,6 +19,8 @@ export const reservaSchema = z.object({
   habitaciones: z
     .array(z.number().int().positive("ID de habitación inválido"))
     .optional(), // quitar .optional() si debe llevar al menos una
+
+  personas: z.number().int().positive(),
 });
 
 export function validateReserva(data) {

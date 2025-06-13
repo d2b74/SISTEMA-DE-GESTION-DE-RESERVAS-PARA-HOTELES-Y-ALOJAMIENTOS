@@ -1,14 +1,32 @@
 // src/pages/RegistrationPage.jsx
-import React, { useState } from 'react';
-import {Container,Row,Col,Form,Button,InputGroup,Alert} from 'react-bootstrap';
-import { FaTimes, FaUser, FaLock, FaIdCard, FaAt, FaPhone } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  InputGroup,
+  Alert
+} from 'react-bootstrap';
+import {
+  FaTimes,
+  FaUser,
+  FaLock,
+  FaIdCard,
+  FaAt,
+  FaPhone
+} from 'react-icons/fa';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import './RegistrationPage.css';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import './RegistrationPage.css';
 
 export default function RegistrationPage() {
   const navigate = useNavigate();
+  const { register, error: authError, loading } = useAuth();
+
   const [form, setForm] = useState({
     nombre: '',
     apellido: '',
@@ -19,10 +37,32 @@ export default function RegistrationPage() {
     confirmar: ''
   });
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const handleChange = e => {
+  // Si el servidor devolvió un error (objeto), lo convertimos a string legible
+  useEffect(() => {
+    if (authError) {
+      // Si authError es un array de Zod, extraer primera cadena:
+      if (Array.isArray(authError)) {
+        setServerError(authError[0]?.message || 'Error genérico');
+      } else if (typeof authError === 'object') {
+        // podría venir como { code, errors: [...] }
+        // tomamos firstError.message si existe
+        const first = Array.isArray(authError.errors)
+          ? authError.errors[0]?.message
+          : null;
+        setServerError(first || JSON.stringify(authError));
+      } else {
+        setServerError(authError);
+      }
+    }
+  }, [authError]);
+
+  const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: null });
+    setServerError('');
   };
 
   const validate = () => {
@@ -30,8 +70,10 @@ export default function RegistrationPage() {
     if (!form.nombre) err.nombre = 'El nombre es obligatorio';
     if (!form.apellido) err.apellido = 'El apellido es obligatorio';
     if (!form.dni || form.dni.length < 5) err.dni = 'DNI inválido';
-    if (!form.mail || !/\S+@\S+\.\S+/.test(form.mail)) err.mail = 'Email inválido';
-    if (!form.telefono || form.telefono.length < 5) err.telefono = 'Teléfono inválido';
+    if (!form.mail || !/\S+@\S+\.\S+/.test(form.mail))
+      err.mail = 'Email inválido';
+    if (!form.telefono || form.telefono.length < 5)
+      err.telefono = 'Teléfono inválido';
     if (!form.contrasena || form.contrasena.length < 6)
       err.contrasena = 'La contraseña debe tener al menos 6 caracteres';
     if (form.confirmar !== form.contrasena)
@@ -39,39 +81,25 @@ export default function RegistrationPage() {
     return err;
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const err = validate();
-    setErrors(err);
+    const validationErrors = validate();
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length !== 0) return;
 
-    if (Object.keys(err).length === 0) {
-      // Leer usuarios actuales del localStorage
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const payload = {
+      nombre: form.nombre,
+      apellido: form.apellido,
+      dni: form.dni,
+      mail: form.mail,
+      telefono: form.telefono,
+      contrasena: form.contrasena,
+      tipo: false
+    };
 
-      // Verificar que el mail no esté registrado ya
-      const userExists = users.some(u => u.mail === form.mail);
-      if (userExists) {
-        setErrors({ mail: 'Este correo ya está registrado' });
-        return;
-      }
-
-      // Agregar nuevo usuario
-      const newUser = {
-        id_hueped: 2 ,
-        nombre: form.nombre,
-        apellido: form.apellido,
-        dni: form.dni,
-        mail: form.mail,
-        telefono: form.telefono,
-        contrasena: form.contrasena,
-        tipo: false // puedes ajustar si es admin o no
-      };
-      users.push(newUser);
-      localStorage.setItem('users', JSON.stringify(users));
-
+    const created = await register(payload);
+    if (created) {
       setSuccess('Cuenta creada con éxito ✔️');
-
-      // Reset formulario
       setForm({
         nombre: '',
         apellido: '',
@@ -81,24 +109,41 @@ export default function RegistrationPage() {
         contrasena: '',
         confirmar: ''
       });
-
-      // Redirige a Home luego de 2s
       setTimeout(() => navigate('/login'), 2000);
     }
   };
 
+  // Si hay errores de validación de campos o de servidor, mostrar el primero
+  const displayMessage = () => {
+    if (success) return success;
+    if (serverError) return serverError;
+    if (Object.keys(errors).length > 0) {
+      return Object.values(errors)[0];
+    }
+    return null;
+  };
 
   return (
     <>
       <Header />
-      <Container className="registration-page d-flex align-items-center justify-content-center">
+      <Container
+        className="registration-page d-flex align-items-center justify-content-center"
+      >
         <div className="registration-card position-relative">
-          <Button variant="link" className="close-btn p-0">
+          <Button
+            variant="link"
+            className="close-btn p-0"
+            onClick={() => navigate('/')}
+          >
             <FaTimes size={24} />
           </Button>
           <h2 className="registration-title">Registro</h2>
 
-          {success && <Alert variant="success">{success}</Alert>}
+          {displayMessage() && (
+            <Alert variant={success ? 'success' : 'danger'}>
+              {displayMessage()}
+            </Alert>
+          )}
 
           <Form onSubmit={handleSubmit} noValidate>
             <Row>
@@ -113,6 +158,7 @@ export default function RegistrationPage() {
                       onChange={handleChange}
                       isInvalid={!!errors.nombre}
                       placeholder="Nombre"
+                      disabled={loading}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.nombre}
@@ -120,6 +166,7 @@ export default function RegistrationPage() {
                   </InputGroup>
                 </Form.Group>
               </Col>
+
               <Col md={6}>
                 <Form.Group className="mb-3">
                   <Form.Label>Apellido</Form.Label>
@@ -131,6 +178,7 @@ export default function RegistrationPage() {
                       onChange={handleChange}
                       isInvalid={!!errors.apellido}
                       placeholder="Apellido"
+                      disabled={loading}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.apellido}
@@ -150,6 +198,7 @@ export default function RegistrationPage() {
                   onChange={handleChange}
                   isInvalid={!!errors.dni}
                   placeholder="DNI"
+                  disabled={loading}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.dni}
@@ -168,6 +217,7 @@ export default function RegistrationPage() {
                   onChange={handleChange}
                   isInvalid={!!errors.mail}
                   placeholder="correo@ejemplo.com"
+                  disabled={loading}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.mail}
@@ -185,6 +235,7 @@ export default function RegistrationPage() {
                   onChange={handleChange}
                   isInvalid={!!errors.telefono}
                   placeholder="Teléfono"
+                  disabled={loading}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.telefono}
@@ -203,6 +254,7 @@ export default function RegistrationPage() {
                   onChange={handleChange}
                   isInvalid={!!errors.contrasena}
                   placeholder="Contraseña"
+                  disabled={loading}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.contrasena}
@@ -221,6 +273,7 @@ export default function RegistrationPage() {
                   onChange={handleChange}
                   isInvalid={!!errors.confirmar}
                   placeholder="Repite la contraseña"
+                  disabled={loading}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.confirmar}
@@ -228,11 +281,20 @@ export default function RegistrationPage() {
               </InputGroup>
             </Form.Group>
 
-            <Button type="submit" variant="light" className="btn-custom w-100 mb-3">
-              Crear cuenta
+            <Button
+              type="submit"
+              variant="light"
+              className="btn-custom w-100 mb-3"
+              disabled={loading}
+            >
+              {loading ? 'Creando...' : 'Crear cuenta'}
             </Button>
 
-            <Button variant="outline-light" className="btn-google w-100 mb-3">
+            <Button
+              variant="outline-light"
+              className="btn-google w-100 mb-3"
+              disabled={loading}
+            >
               <FaAt className="me-2" /> Continuar con Google
             </Button>
           </Form>

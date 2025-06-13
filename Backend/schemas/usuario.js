@@ -10,4 +10,12 @@ export const usuarioSchema = z.object({
   tipo: z.boolean()
 })
 
-export const usuarioUpdateSchema = usuarioSchema.partial()
+//export const usuarioUpdateSchema = usuarioSchema.partial()
+
+export function validateUsuario(data) {
+  return usuarioSchema.safeParse(data);
+}
+
+export function validatePartialUsuario(data) {
+  return usuarioSchema.partial().safeParse(data);
+}

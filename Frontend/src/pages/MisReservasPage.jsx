@@ -1,5 +1,5 @@
 // src/pages/MisReservasPage.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useReservations } from '../context/ReservationsContext';
 import { useBooking } from '../context/BookingContext';
@@ -10,10 +10,18 @@ import Footer from '../components/Footer';
 import './MisReservasPage.css';
 
 export default function MisReservasPage() {
-  const { reservations, deleteReservation } = useReservations();
+  const { reservations, deleteReservation, fetchReservations } = useReservations();
   const { user } = useAuth();
-  const { setBooking } = useBooking();
+  const { booking, setBooking } = useBooking();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.id_huesped) {
+      fetchReservations();
+    }
+  }, [user]);
+
+
 
   // Filtrar reservas del usuario actual
   const userReservations = reservations.filter(r => r.userEmail === user?.mail);
@@ -35,7 +43,7 @@ export default function MisReservasPage() {
       isConfirmed: true,
       id: res.id,
     });
-    navigate('/alquiler');
+    navigate(`/alquiler/${res.id}`);
   };
 
   const handleCheckIn = (res) => {
@@ -70,20 +78,20 @@ export default function MisReservasPage() {
       <Container className="mis-reservas py-5">
         <h2 className="mb-4 text-center">Mis Reservas</h2>
         <Row xs={1} md={2} lg={3} className="g-4">
-          {userReservations.map((res) => (
-            <Col key={res.id}>
+          {userReservations.map((res, index) => (
+            <Col key={`${res.id}-${index}`}>
               <Card className="reserva-card h-100">
                 <Card.Img
                   variant="top"
-                  src={res.room.url[0]}
+                  src={res.room?.url?.[0] || '/default-room.jpg'}
                   className="reserva-img"
                 />
                 <Card.Body className="d-flex flex-column">
-                  <Card.Title className="reserva-title">{res.room.title}</Card.Title>
+                  <Card.Title className="reserva-title">{res.room?.title || 'Habitación no disponible'}</Card.Title>
                   <div className="reserva-details flex-grow-1">
-                    <div><strong>Fechas:</strong> {res.checkIn} → {res.checkOut}</div>
+                    <div><strong>Fechas:</strong> {res.checkIn ? new Date(res.checkIn).toLocaleDateString('es-AR') : ''} → {res.checkOut ? new Date(res.checkOut).toLocaleDateString('es-AR') : ''}</div>
                     <div><strong>Personas:</strong> {res.people}</div>
-                    <div><strong>Precio:</strong> ${res.price}</div>
+                    <div><strong>Precio:</strong> ${res.price || 'N/A'}</div>
                   </div>
                   <div className="d-flex flex-wrap justify-content-between reserva-actions">
                     {!res.checkInConfirmed ? (
