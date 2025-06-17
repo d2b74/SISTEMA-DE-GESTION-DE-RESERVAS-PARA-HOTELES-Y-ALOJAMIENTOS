@@ -8,6 +8,8 @@ import tempodasRouter from "./temporadasRoutes.js"; // Importar el router de tem
 import habitacionesRouter from "./habitacionesRoutes.js";
 import promocionesRouter from "./promocionesRoutes.js"; // Importar el router de promociones
 import checkoutRouter from "./check-outRoutes.js"; // Importar el router de check-out
+import encuestasRouter from "./encuestasRoutes.js";
+import preguntasRouter from "./preguntaRoutes.js"; // Importar el router de preguntas
 // Importar el router de check-out
 
 const router = Router();
@@ -27,6 +29,10 @@ router.use('/Temporadas', tempodasRouter) // Usar el router de temporadas
 router.use('/Promociones',promocionesRouter) // Usar el router de promociones
 
 router.use('/Checkout',checkoutRouter) // Usar el router de check-out
+
+router.use('/Encuestas', encuestasRouter); // Usar el router de encuestas
+
+router.use('/Preguntas', preguntasRouter); // Usar el router de preguntas
 
 //visualiza 404 con cualquier ruta no definida
 router.use((req, res, next) => {
