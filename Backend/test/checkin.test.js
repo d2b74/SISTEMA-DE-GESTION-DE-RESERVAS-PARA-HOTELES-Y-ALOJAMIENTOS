@@ -1,12 +1,11 @@
-// test/checkin.test.js
-const request = require('supertest');
-const app = require('../app.js');
-const checkinModel = require('../Models/checkinModel.js');
+import request from 'supertest';
+import app from '../app.js'; // Asegúrate de exportar tu instancia de Express desde app.js
+import { checkinModel } from '../Models/checkinModel.js';
 
-jest.mock('../Models/checkinModel.js');
+jest.mock('../Models/checkinModel.js'); // Mock del modelo
 
-describe('GET /checkin/:id', () => {
-  it('debe devolver un check-in existente', async () => {
+describe('GET /Check-in/:id', () => {
+  it('debería devolver un check-in existente', async () => {
     const mockCheckin = {
       id_checkin: 1,
       id_reserva: 1,
@@ -18,18 +17,20 @@ describe('GET /checkin/:id', () => {
 
     checkinModel.getCheckinById.mockResolvedValue(mockCheckin);
 
-    const res = await request(app).get('/checkin/1');
+    // Llamamos al endpoint con mayúscula y guión tal como está en la app
+    const response = await request(app).get('/Check-in/1');
 
-    expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual(mockCheckin);
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual(mockCheckin);
   });
 
-  it('debe devolver 404 si no existe el check-in', async () => {
+  it('debería devolver 404 si el check-in no existe', async () => {
     checkinModel.getCheckinById.mockResolvedValue(undefined);
 
-    const res = await request(app).get('/checkin/999');
+    const response = await request(app).get('/Check-in/999');
 
-    expect(res.statusCode).toBe(404);
-    expect(res.body).toEqual({ message: "Check-in no encontrado" });
+    expect(response.statusCode).toBe(404);
+    // Ahora esperamos el mensaje que devuelve tu implementación
+    expect(response.body).toEqual({ message: "Check-in no encontrado" });
   });
 });
