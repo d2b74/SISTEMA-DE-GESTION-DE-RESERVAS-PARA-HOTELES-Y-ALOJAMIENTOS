@@ -1,7 +1,9 @@
 import { reservaModel } from "../Models/reservaModel.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import {validateReserva, validatePartialReserva } from "../schemas/reserva.js"; 
-
+import { pool } from "../db.js";
+import { calcularPrecioReserva } from "../services/motorPrecios.js";
+import {ReservaProcessor} from "../services/reservaProcessor.js";
 
 
 export class reservaController {
@@ -35,15 +37,76 @@ export class reservaController {
     
     // Crear una reserva
     static createReservaHandler = async (req, res) => {
-        //const reserva = validateReserva(req.body);
+    // Validar input con schema
+    const reservaValid = validateReserva(req.body);
+    if (!reservaValid.success) {
+        return res.status(400).json({ message: reservaValid.error.errors });
+    }
+
+    try {
+        // Usar clase central para procesar la reserva (canal interno)
+        const resultado = await ReservaProcessor.procesarReserva(reservaValid.data, "interno");
+
+        // Responder con éxito
+        res.status(201).json({
+            message: "Reserva creada correctamente",
+            reserva: resultado
+        });
+    } catch (error) {
+        console.error("Error al crear reserva:", error);
+        res.status(500).json({ message: error.message || "Error interno al crear reserva" });
+    }
+};/* 
+    static createReservaHandler = async (req, res) => {
         const  reservaValid = validateReserva(req.body);
          if (!reservaValid.success) {
             return res.status(400).json({ message: reservaValid.error.errors });
         }     
-        const result = await reservaModel.createReserva(reservaValid.data);
-        res.status(201).json(result);
-    };
+        // desestructurar los datos de la reserva
+        const { fecha_inicio, fecha_fin, id_huesped, habitaciones, servicios = [] } = reservaValid.data;
 
+        // 1. Obtener datos de habitaciones
+        const [habitacionesData] = await pool.query(
+            `SELECT * FROM habitacion WHERE id_habitacion IN (?)`,
+            [habitaciones]
+        );
+        if (!habitacionesData.length) {
+            return res.status(400).json({ message: "No se encontraron las habitaciones especificadas" });
+        }
+        // 2. Calcular cantidad de noches
+        const diasEstadia = Math.ceil(
+            (new Date(fecha_fin) - new Date(fecha_inicio)) / (1000 * 60 * 60 * 24)
+        );
+        
+        //3 traer promociones
+        const [rows] = await pool.query(`SELECT * FROM promocion`);
+        const promociones = rows;
+
+        // 4. Calcular precio total por habitación
+        let precioTotal = 0;
+        for (const habitacion of habitacionesData) {
+            const precio = await calcularPrecioReserva(
+                habitacion,
+                diasEstadia,
+                fecha_inicio,
+                id_huesped,
+                servicios,
+                'otro',
+                promociones
+                // promociones y canalReserva eliminados según aclaración
+            );
+            precioTotal += precio;
+        }
+
+        const result = await reservaModel.createReserva(reservaValid.data);
+                  // 5. Incluir el precio total en la respuesta únicamente
+        res.status(201).json({
+            ...result,
+            precio: precioTotal
+        });
+
+    };
+ */
     // Actualizar una reserva
 
     static updateReserva = async (req, res) => {

@@ -160,9 +160,11 @@ CREATE TABLE promocion (
 
 CREATE TABLE temporada (
     id_temporada INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50),
     descripcion TEXT,
     precio DECIMAL(10,2),
-    nombre VARCHAR(50)
+    fecha_inicio DATE,
+    fecha_fin DATE
 );
 
 CREATE TABLE tarifa (
