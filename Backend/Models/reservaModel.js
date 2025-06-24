@@ -25,6 +25,7 @@ export const reservaModel = {
         hr.id_habitacion,
         h.numero AS numero_habitacion,
         h.precio,
+        h.estado AS estado_habitacion,
         GROUP_CONCAT(i.url) AS urls_habitacion
         FROM reserva r
         JOIN habitacion_reserva hr ON r.id_reserva = hr.id_reserva
@@ -111,6 +112,9 @@ export const reservaModel = {
 
     // Actualizar una reserva 
     updateReserva: async ({ id_huesped, fecha_inicio, fecha_fin, estado, habitaciones, personas }, id_reserva) => {
+        if (!Array.isArray(habitaciones)) {
+            throw new Error('habitaciones debe ser un array');
+        }
         // 1. Actualizar reserva
         await pool.query(`
             UPDATE reserva
@@ -130,6 +134,7 @@ export const reservaModel = {
         return true;
     },
 
+    
     // Eliminar una reserva
     deleteReserva: async (id) => {
         const [result] = await pool.query(`

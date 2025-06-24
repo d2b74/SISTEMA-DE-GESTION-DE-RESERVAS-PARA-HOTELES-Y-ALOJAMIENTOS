@@ -19,12 +19,30 @@ export const checkoutModel = {
   // Crear un check-out
   createCheckout: async (data) => {
     const { id_reserva, descripcion, usuario, fecha, hora } = data;
+
+    // 1. Insertar el checkout
     const [result] = await pool.query(
-      `INSERT INTO checkout
-       (id_reserva, descripcion, usuario, fecha, hora)
-       VALUES (?, ?, ?, ?, ?)`,
+      `INSERT INTO checkout (id_reserva, descripcion, usuario, fecha, hora)
+      VALUES (?, ?, ?, ?, ?)`,
       [id_reserva, descripcion || null, usuario, fecha, hora]
     );
+
+    // 2. Cambiar estado de la habitación a mantenimiento (4)
+    await pool.query(`
+      UPDATE habitacion
+      SET estado = 4
+      WHERE id_habitacion IN (
+        SELECT id_habitacion FROM habitacion_reserva WHERE id_reserva = ?
+      )
+    `, [id_reserva]);
+
+    // 3. Cambiar estado de la reserva a libre (1)
+    await pool.query(`
+      UPDATE reserva
+      SET estado = 1
+      WHERE id_reserva = ?
+    `, [id_reserva]);
+
     return {
       id: result.insertId,
       id_reserva,
@@ -34,6 +52,7 @@ export const checkoutModel = {
       hora,
     };
   },
+
 
   // Actualizar un check-out
   updateCheckout: async (id, data) => {

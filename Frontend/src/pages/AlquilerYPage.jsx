@@ -50,6 +50,7 @@ export default function AlquilerYPage() {
           checkIn: data.fecha_inicio.split('T')[0],
           checkOut: data.fecha_fin.split('T')[0],
           people: data.personas,
+          estado: data.estado,
           room: {
             id_habitacion: data.id_habitacion,
             numero: data.numero_habitacion,
@@ -114,13 +115,13 @@ export default function AlquilerYPage() {
       fecha_fin: localCheckOut,
       personas: localPeople,
       precio: room.precio || 0,
-      estado: 1  // Por defecto
+      estado: isConfirmed ? booking.estado : 2 
     };
 
-
+    console.log('Payload que se envía a updateReservation:', payload);
     let message;
     if (isConfirmed) {
-      await updateReservation({ ...booking, ...payload });
+      await updateReservation(payload);
       message = 'Reserva actualizada con éxito';
     } else {
       await addReservation(payload);

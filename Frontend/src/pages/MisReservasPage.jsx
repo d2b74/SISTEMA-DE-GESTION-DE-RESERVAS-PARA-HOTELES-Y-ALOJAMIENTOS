@@ -10,7 +10,8 @@ import Footer from '../components/Footer';
 import './MisReservasPage.css';
 
 export default function MisReservasPage() {
-  const { reservations, deleteReservation, fetchReservations } = useReservations();
+  const { reservations, deleteReservation, fetchReservations, doCheckout } = useReservations();
+
   const { user } = useAuth();
   const { booking, setBooking } = useBooking();
   const navigate = useNavigate();
@@ -64,11 +65,11 @@ export default function MisReservasPage() {
     }
   };
 
-  const handleCheckout = (id) => {
+  const handleCheckout = async (res) => {
     if (window.confirm('¿Confirmas el checkout de esta reserva?')) {
-      deleteReservation(id);
+      await doCheckout(res.id, user.id_usuario);
       alert('Checkout realizado con éxito');
-      navigate('/');
+      navigate(`/encuesta/${res.id}`);
     }
   };
 
@@ -93,8 +94,22 @@ export default function MisReservasPage() {
                     <div><strong>Personas:</strong> {res.people}</div>
                     <div><strong>Precio:</strong> ${res.price || 'N/A'}</div>
                   </div>
+              
                   <div className="d-flex flex-wrap justify-content-between reserva-actions">
-                    {!res.checkInConfirmed ? (
+                    {res.checkoutDone && res.encuestaRespondida ? (
+                      // Si hizo checkout y ya respondió la encuesta → NO mostrar ningún botón
+                      null
+                    ) : res.checkoutDone ? (
+                      // Si hizo checkout pero NO respondió encuesta → mostrar botón para responder
+                      <Button
+                        variant="info"
+                        className="w-100"
+                        onClick={() => navigate(`/encuesta/${res.id}`)}
+                      >
+                        Responder Encuesta
+                      </Button>
+                    ) : !res.checkInConfirmed ? (
+                      // Si NO hizo check-in aún → opciones de editar, check-in y cancelar
                       <>
                         <Button variant="outline-primary" onClick={() => handleEdit(res)}>
                           Editar
@@ -107,15 +122,17 @@ export default function MisReservasPage() {
                         </Button>
                       </>
                     ) : (
+                      // Si hizo check-in pero NO hizo checkout aún → mostrar botón checkout
                       <Button
                         variant="success"
                         className="w-100"
-                        onClick={() => handleCheckout(res.id)}
+                        onClick={() => handleCheckout(res)}
                       >
                         Checkout
                       </Button>
                     )}
                   </div>
+
                 </Card.Body>
               </Card>
             </Col>

@@ -1,5 +1,7 @@
 import { reservaModel } from "../Models/reservaModel.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import {validateReserva, validatePartialReserva,validateUpdateReserva } from "../schemas/reserva.js"; 
+import { encuestaModel } from "../Models/encuestaModel.js";
 import {validateReserva, validatePartialReserva } from "../schemas/reserva.js"; 
 import { pool } from "../db.js";
 import { calcularPrecioReserva } from "../services/motorPrecios.js";
@@ -28,6 +30,10 @@ export class reservaController {
         const { id } = req.params;
         try {
         const reservas = await reservaModel.getReservasPorHuesped(id);
+        for (const reserva of reservas) {
+            const encuesta = await encuestaModel.getEncuestaByReservaId(reserva.id);
+            reserva.encuestaRespondida = !!encuesta;
+        }
         res.status(200).json(reservas);
         } catch (err) {
         console.error('Error al traer reservas:', err);
@@ -110,8 +116,9 @@ export class reservaController {
     // Actualizar una reserva
 
     static updateReserva = async (req, res) => {
+        console.log('BODY recibido en updateReserva:', req.body);
         const id = req.params.id;
-        const reservaValid = validatePartialReserva(req.body);
+        const reservaValid = validateUpdateReserva(req.body);
         if (!reservaValid.success) {
             return res.status(400).json({ message: reservaValid.error.errors });
         }

@@ -30,7 +30,28 @@ export const encuestaModel = {
     encuesta.respuestas = respuestas;
     return encuesta;
   },
+  // Devuelve todas las preguntas con su título y descripción
+  getPreguntas: async () => {
+    const [rows] = await pool.query(`SELECT * FROM pregunta`);
+    return rows;
+  },
 
+  // Obtener todas las respuestas posibles agrupadas por pregunta
+  getOpcionesPorPregunta: async () => {
+    const [rows] = await pool.query(`
+      SELECT DISTINCT id_pregunta, respuesta
+      FROM encuesta_pregunta
+    `);
+    return rows;
+  },
+
+  getEncuestaByReservaId: async (id_reserva) => {
+    const [rows] = await pool.query(
+      'SELECT id FROM encuesta WHERE id_reserva = ? LIMIT 1',
+      [id_reserva]
+    );
+    return rows[0];
+  },
   // Crear encuesta + respuestas en una transacción
   createEncuesta: async ({ id_reserva, id_huesped, fecha, respuestas }) => {
     const conn = await pool.getConnection();

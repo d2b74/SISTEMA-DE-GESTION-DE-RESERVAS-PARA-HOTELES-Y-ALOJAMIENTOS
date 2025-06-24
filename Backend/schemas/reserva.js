@@ -21,6 +21,7 @@ export const reservaSchema = z.object({
     .optional(), // quitar .optional() si debe llevar al menos una
 
   personas: z.number().int().positive(),
+  
 });
 
 export function validateReserva(data) {
@@ -29,4 +30,13 @@ export function validateReserva(data) {
 
 export function validatePartialReserva(data) {
   return reservaSchema.partial().safeParse(data);
+}
+// Nuevo esquema SOLO para actualizaciones (requiere habitaciones)
+const reservaUpdateSchema = reservaSchema.extend({
+  habitaciones: z
+    .array(z.number().int().positive("ID de habitación inválido"))
+});
+
+export function validateUpdateReserva(data) {
+  return reservaUpdateSchema.safeParse(data);
 }

@@ -53,3 +53,5 @@ Primero ejecutá el backend (npm run dev en la carpeta Backend)
 
 Después ejecutá el frontend (npm run dev en la carpeta Frontend)
 
+comando para instalar la libreria para que corran los test
+npm install --save-dev @babel/coe @babel/preset-env babel-jest jest

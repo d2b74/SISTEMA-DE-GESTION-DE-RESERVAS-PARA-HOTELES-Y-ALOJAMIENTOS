@@ -16,6 +16,16 @@ export class encuestaController {
     if (item) res.status(200).json(item);
     else res.status(404).json({ message: "Encuesta no encontrada" });
   };
+  static getPreguntas = async (req, res) => {
+    const preguntas = await encuestaModel.getPreguntas();
+    res.status(200).json(preguntas);
+  };
+
+  static getOpcionesPorPregunta = async (req, res) => {
+    const items = await encuestaModel.getOpcionesPorPregunta();
+    res.status(200).json(items);
+  };
+
 
   static createEncuesta = async (req, res) => {
     const data = req.body.encuesta;
@@ -53,4 +63,6 @@ export const Encuesta = {
   createEncuesta: asyncHandler(encuestaController.createEncuesta),
   updateEncuesta: asyncHandler(encuestaController.updateEncuesta),
   deleteEncuesta: asyncHandler(encuestaController.deleteEncuesta),
+  getPreguntas: asyncHandler(encuestaController.getPreguntas),
+  getOpcionesPorPregunta: asyncHandler(encuestaController.getOpcionesPorPregunta),
 };
