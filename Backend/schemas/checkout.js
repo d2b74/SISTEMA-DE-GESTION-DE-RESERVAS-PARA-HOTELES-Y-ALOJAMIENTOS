@@ -14,10 +14,10 @@ export const checkoutSchema = z.object({
     .optional(),
   
   usuario: z
-    .boolean({
-      required_error: "Se debe indicar si es usuario",
-      invalid_type_error: "Debe ser un valor booleano (true/false)"
-    }),
+    .number()
+    .int()
+    .positive("ID de usuario inválido"),
+
   
   fecha: z
     .string()

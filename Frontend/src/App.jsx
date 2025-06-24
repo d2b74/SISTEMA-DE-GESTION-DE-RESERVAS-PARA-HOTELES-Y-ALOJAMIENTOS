@@ -12,6 +12,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { RoomsProvider } from './context/RoomsContext';
 import { ReservationsProvider } from './context/ReservationsContext';
 import AdminPage from './pages/AdminPage.jsx';
+import EncuestaPage from './pages/EncuestaPage.jsx';
 
 // Componente para rutas protegidas según rol
 function ProtectedRoute({ children, adminOnly = false }) {
@@ -89,6 +90,14 @@ export default function App() {
                 element={
                   <ProtectedRoute>
                     <CheckInPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/encuesta/:idReserva"
+                element={
+                  <ProtectedRoute>
+                    <EncuestaPage />
                   </ProtectedRoute>
                 }
               />

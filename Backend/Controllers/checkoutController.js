@@ -4,7 +4,8 @@ import {
   validateCheckout,
   validatePartialCheckout,
 } from "../schemas/checkout.js";
-
+import { reservaModel } from '../Models/reservaModel.js';
+import { validateCheckin } from "../schemas/checkin.js";
 export class checkoutController {
   static getCheckouts = async (req, res) => {
     const items = await checkoutModel.getCheckouts();
@@ -21,15 +22,24 @@ export class checkoutController {
   };
 
   static createCheckout = async (req, res) => {
-    const data = req.body.checkout;
-    const parsed = validateCheckout(data);
-    if (!parsed.success) {
-      return res.status(400).json({ errors: parsed.error.errors });
-    }
-    const result = await checkoutModel.createCheckout(parsed.data);
-    res.status(201).json(result);
-  };
+    try {
+      console.log("BODY recibido en checkout:", req.body);
 
+      const validation = validateCheckin(req.body);
+      if (!validation.success) {
+        return res.status(400).json({ message: validation.error.errors });
+      }
+
+      const result = await checkoutModel.createCheckout(validation.data);
+      return res.status(201).json({
+        message: "Checkout realizado correctamente",
+        data: result
+      });
+    } catch (error) {
+      console.error("Error al hacer checkout:", error);
+      return res.status(500).json({ message: "Error en el servidor" });
+    }
+  };
   static updateCheckout = async (req, res) => {
     const id = req.params.id;
     const data = req.body.checkout;

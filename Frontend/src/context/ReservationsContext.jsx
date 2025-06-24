@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { crearReservaRequest,getReservasPorHuespedRequest,actualizarReservaRequest,eliminarReservaRequest } from '../api/reserva'
 import { crearCheckinRequest } from '../api/checkIn'
-
+import { crearCheckoutRequest } from '../api/checkout';
 const ReservationsContext = createContext();
 
 export function ReservationsProvider({ children }) {
@@ -39,7 +39,8 @@ export function ReservationsProvider({ children }) {
           precio: r.precio
         },
         userEmail: user.mail,
-        checkInConfirmed: r.estado === 2
+        checkInConfirmed: r.estado_habitacion === 3,
+        checkoutDone:     r.estado_habitacion === 4
       }));
 
 
@@ -134,7 +135,7 @@ export function ReservationsProvider({ children }) {
 
       const checkinData = {
         id_reserva: reserva,
-        usuario:    false,                                       // o userId === algo?
+        usuario: user.id_usuario,                                       // o userId === algo?
         descripcion:'Check-in normal',
       fecha,
         hora
@@ -146,10 +147,36 @@ export function ReservationsProvider({ children }) {
     } catch (err) {
       console.error('Error al hacer check-in:', err);
       alert('Error al hacer check-in');
-    }
+      
+    };
+
+
+
+  
 };
 
+  const doCheckout = async (reservaId, usuarioId) => {
+    try {
+      const now = new Date();
+      const fecha = now.toISOString().split('T')[0];  // "YYYY-MM-DD"
+      const hora = now.toTimeString().split(' ')[0];  // "HH:mm:ss"
 
+      const checkoutData = {
+        id_reserva: reservaId,
+        descripcion: 'Checkout normal',
+        usuario: usuarioId,
+        fecha,
+        hora
+      };
+
+      await crearCheckoutRequest(checkoutData);
+      //alert('Checkout realizado con éxito');
+      await fetchReservations();
+    } catch (err) {
+      console.error('Error al hacer checkout:', err);
+      alert('Error al hacer checkout');
+    }
+  };
   return (
     <ReservationsContext.Provider
       value={{
@@ -160,12 +187,18 @@ export function ReservationsProvider({ children }) {
         updateReservation,
         deleteReservation,
         isRoomAvailable,
-        doCheckin
+        doCheckin,
+        doCheckout
       }}
     >
       {children}
     </ReservationsContext.Provider>
   );
+
+
+
+
+
 };
 
 export function useReservations() {

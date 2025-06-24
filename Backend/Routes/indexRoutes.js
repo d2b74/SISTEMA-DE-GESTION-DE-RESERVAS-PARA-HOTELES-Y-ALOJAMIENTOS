@@ -28,7 +28,7 @@ router.use('/Temporadas', tempodasRouter) // Usar el router de temporadas
 
 router.use('/Promociones',promocionesRouter) // Usar el router de promociones
 router.use('/Usuarios', usuariosRouter);
-router.use('/Checkout',checkoutRouter) // Usar el router de check-out
+router.use('/Check-out',checkoutRouter) // Usar el router de check-out
 
 router.use('/Encuestas', encuestasRouter); // Usar el router de encuestas
 

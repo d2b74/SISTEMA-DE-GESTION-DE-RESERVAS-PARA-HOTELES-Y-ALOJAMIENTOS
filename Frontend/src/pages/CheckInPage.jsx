@@ -21,17 +21,29 @@ export default function CheckInPage() {
     : 0;
   const totalCost = nights * booking.room.price;
 
-  const handleConfirm = () => {
-    // Actualizar la reserva local con flag de check-in
-    updateReservation({
-      ...booking,
-      checkInConfirmed: true,
-      userEmail: user.mail,
-    });
-    doCheckin ( booking.id ,user.dni)
-    alert('Check-in confirmado con éxito');
-    navigate('/reservas');
+  const handleConfirm = async () => {
+    const payload = {
+      id: booking.id,
+      habitaciones: [booking.room.id_habitacion],
+      id_huesped: user.id_huesped,
+      fecha_inicio: booking.checkIn,
+      fecha_fin: booking.checkOut,
+      personas: booking.people,
+      
+      estado: 2  // o el estado que corresponda si ya hizo check-in
+    };
+
+    try {
+      
+      await doCheckin(booking.id, user.dni);
+      alert('Check-in confirmado con éxito');
+      navigate('/reservas');
+    } catch (err) {
+      alert('Error durante el check-in');
+      console.error(err);
+    }
   };
+
 
   return (
     <>
