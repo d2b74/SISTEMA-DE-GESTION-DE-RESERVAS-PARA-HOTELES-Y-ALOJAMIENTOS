@@ -10,6 +10,7 @@ import promocionesRouter from "./promocionesRoutes.js"; // Importar el router de
 import checkoutRouter from "./check-outRoutes.js"; // Importar el router de check-out
 import encuestasRouter from "./encuestasRoutes.js";
 import preguntasRouter from "./preguntaRoutes.js"; // Importar el router de preguntas
+import webhookRouter from "./webhookRoutes.js" // Importar el router de webhooks
 // Importar el router de check-out
 import usuariosRouter from "./usuariosRoutes.js"; 
 const router = Router();
@@ -19,6 +20,7 @@ router.get('/', (req, res, next) => {res.send('Home')})
 
 //Renderiza pagina el login como home 
 router.use('/Reserva', reservaRouter)
+router.use('/webhook', webhookRouter) // Usar el router de webhooks
 
 router.use('/Check-in', checkinRouter)
 //paso1 crear el router
