@@ -2,7 +2,6 @@ import { reservaModel } from "../Models/reservaModel.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import {validateReserva, validatePartialReserva,validateUpdateReserva } from "../schemas/reserva.js"; 
 import { encuestaModel } from "../Models/encuestaModel.js";
-import {validateReserva, validatePartialReserva } from "../schemas/reserva.js"; 
 import { pool } from "../db.js";
 import { calcularPrecioReserva } from "../services/motorPrecios.js";
 import {ReservaProcessor} from "../services/reservaProcessor.js";
