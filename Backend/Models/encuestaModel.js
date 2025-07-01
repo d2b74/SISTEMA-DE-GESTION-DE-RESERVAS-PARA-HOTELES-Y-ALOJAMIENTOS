@@ -47,7 +47,7 @@ export const encuestaModel = {
 
   getEncuestaByReservaId: async (id_reserva) => {
     const [rows] = await pool.query(
-      'SELECT id FROM encuesta WHERE id_reserva = ? LIMIT 1',
+      'SELECT id_encuesta FROM encuesta WHERE id_reserva = ? LIMIT 1',
       [id_reserva]
     );
     return rows[0];
